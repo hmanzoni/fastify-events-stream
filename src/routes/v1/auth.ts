@@ -1,5 +1,5 @@
-import { FastifyInstance } from "fastify";
-import { getProfile, register, login } from "../../controllers/auth";
+import type { FastifyInstance } from "fastify";
+import { getProfile, register, login } from "../../controllers/auth.js";
 
 async function routes(fastify: FastifyInstance, options: Object) {
   // GET	/auth/me	Obtener perfil del usuario autenticado

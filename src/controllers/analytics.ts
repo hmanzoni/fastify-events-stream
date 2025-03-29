@@ -1,4 +1,4 @@
-import { FastifyRequest, FastifyReply } from "fastify";
+import type { FastifyRequest, FastifyReply } from "fastify";
 
 // GET	/analytics/top-events	Obtener los eventos más frecuentes
 export async function events(request: FastifyRequest, reply: FastifyReply) {

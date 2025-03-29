@@ -1,5 +1,5 @@
-import { FastifyInstance } from "fastify";
-import { handleEvents, getRecents, getEvent } from "../../controllers/events";
+import type { FastifyInstance } from "fastify";
+import { handleEvents, getRecents, getEvent } from "../../controllers/events.js";
 
 async function routes(fastify: FastifyInstance, options: Object) {
   // POST	/events	Recibir eventos y enviarlos a Kafka

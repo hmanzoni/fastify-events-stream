@@ -1,4 +1,4 @@
-import { FastifyRequest, FastifyReply } from "fastify";
+import type { FastifyRequest, FastifyReply } from "fastify";
 
 // GET	/auth/me	Obtener perfil del usuario autenticado
 export async function getProfile(request: FastifyRequest, reply: FastifyReply) {

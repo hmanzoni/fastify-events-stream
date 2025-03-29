@@ -1,8 +1,7 @@
-// ESM
-import Fastify, { FastifyInstance } from "fastify";
-import auth from "./routes/v1/auth";
-import events from "./routes/v1/events";
-import analytics from "./routes/v1/analytics";
+import Fastify, { type FastifyInstance } from "fastify";
+import auth from "./routes/v1/auth.js";
+import events from "./routes/v1/events.js";
+import analytics from "./routes/v1/analytics.js";
 
 const fastify: FastifyInstance = Fastify({
   logger: true,
