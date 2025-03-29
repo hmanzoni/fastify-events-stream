@@ -1,0 +1,12 @@
+{
+  "TableName": "events",
+  "KeySchema": [
+    { "AttributeName": "event_id", "KeyType": "HASH" },
+    { "AttributeName": "timestamp", "KeyType": "RANGE" }
+  ],
+  "AttributeDefinitions": [
+    { "AttributeName": "event_id", "AttributeType": "S" },
+    { "AttributeName": "timestamp", "AttributeType": "N" }
+  ],
+  "BillingMode": "PAY_PER_REQUEST"
+}
