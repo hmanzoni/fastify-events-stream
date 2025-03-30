@@ -6,9 +6,8 @@ if (!envVars) {
   throw new Error("Error loading environment variables");
 }
 
-export const kafkaConfig = {
-  host_1: "localhost",
-  port_1: envVars?.KAFKA_PORT || "9092",
-  appName_1: "my-app",
-  topicEvent_1: envVars?.KAFKA_TOPICS?.split(',')[0] || "events",
+export const chConfig = {
+  pass: envVars?.CLICKHOUSE_PASSWORD,
+  user: envVars?.CLICKHOUSE_USER,
+  port: envVars?.CLICKHOUSE_PORT,
 };

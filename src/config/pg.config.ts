@@ -6,9 +6,9 @@ if (!envVars) {
   throw new Error("Error loading environment variables");
 }
 
-export const kafkaConfig = {
-  host_1: "localhost",
-  port_1: envVars?.KAFKA_PORT || "9092",
-  appName_1: "my-app",
-  topicEvent_1: envVars?.KAFKA_TOPICS?.split(',')[0] || "events",
+export const pgConfig = {
+  pass: envVars?.POSTGRES_PASSWORD,
+  user: envVars?.POSTGRES_USER,
+  name: envVars?.POSTGRES_DB,
+  port: envVars?.POSTGRES_PORT,
 };
