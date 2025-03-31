@@ -1,5 +1,5 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
-import kaftaProducer from "../utils/kafkaProducer.ts";
+import kaftaProducer from "../services/producer.service.ts";
 
 // POST	/events	Recibir eventos y enviarlos a Kafka
 export async function handleEvents(

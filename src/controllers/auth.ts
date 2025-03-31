@@ -1,5 +1,5 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
-import kaftaProducer from "../utils/kafkaProducer.ts";
+import kaftaProducer from "../services/producer.service.ts";
 
 // GET	/auth/me	Obtener perfil del usuario autenticado
 export async function getProfile(request: FastifyRequest, reply: FastifyReply) {
