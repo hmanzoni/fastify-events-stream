@@ -8,5 +8,7 @@ if (!envVars) {
 
 export const dynConfig = {
   region: "us-east-1",
-  port: envVars?.DYNAMODB_PORT,
+  protocol: envVars?.DYNAMODB_PROTOCOL || "http",
+  port: envVars?.DYNAMODB_PORT || "8000",
+  host: envVars?.DYNAMODB_HOST || "localhost",	
 };
