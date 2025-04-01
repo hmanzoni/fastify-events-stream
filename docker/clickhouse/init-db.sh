@@ -2,7 +2,6 @@
 set -e
 
 clickhouse client -n <<-EOSQL
-    CREATE DATABASE EventStream IF NOT EXISTS;
     CREATE TABLE events (
         event_id UUID DEFAULT generateUUIDv4(),
         event_type String,
@@ -10,5 +9,6 @@ clickhouse client -n <<-EOSQL
         timestamp DateTime DEFAULT now(),
         metadata String
     ) ENGINE = MergeTree()
+    PRIMARY KEY (event_type)
     ORDER BY (event_type, timestamp);
 EOSQL
