@@ -11,4 +11,5 @@ export const dynConfig = {
   protocol: envVars?.DYNAMODB_PROTOCOL || "http",
   port: envVars?.DYNAMODB_PORT || "8000",
   host: envVars?.DYNAMODB_HOST || "localhost",	
+  tableName: envVars?.DYNAMODB_TABLE || "events",	
 };

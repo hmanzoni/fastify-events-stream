@@ -1,10 +1,6 @@
-import AWS from "aws-sdk";
+import { DynamoDB } from "@aws-sdk/client-dynamodb";
 import { dynConfig } from "../config/dynamo.config.ts";
 
-AWS.config.update({
-  region: dynConfig.region,
-});
-
-const dynDb = new AWS.DynamoDB({ endpoint: `${dynConfig.protocol}://${dynConfig.host}:${dynConfig.port}` });
+const dynDb = new DynamoDB({ region: dynConfig.region, endpoint: `${dynConfig.protocol}://${dynConfig.host}:${dynConfig.port}` });
 
 export default dynDb;
