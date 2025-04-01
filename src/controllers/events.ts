@@ -9,8 +9,8 @@ export async function handleEvents( request: FastifyRequest, reply: FastifyReply
     userId: string;
     metadata: any;
   };
-  kaftaProducer({ eventType, userId, metadata });
-  return reply.send({ hello: "world, from /events" });
+  kaftaProducer({ eventType, userId, metadata: JSON.stringify(metadata) });
+  return reply.status(201).send({response: "Event sent to Kafka", eventType, userId, metadata});
 }
 
 // GET	/events/recent	Obtener los últimos eventos registrados
@@ -19,12 +19,12 @@ export async function getRecents(request: FastifyRequest, reply: FastifyReply) {
   const { topEvents } = request.query as { topEvents: string | undefined };
   limitEvents = topEvents || "10";
   const rows = await getTopEvents(limitEvents);
-  return reply.send({ topEvents: limitEvents, rows });
+  return reply.status(200).send({ topEvents: limitEvents, rows });
 }
 
 // GET	/events/:id	Obtener un evento específico
 export async function getEvent(request: FastifyRequest, reply: FastifyReply) {
   const { id } = request.params as { id: string };
   const rows = await getEventById(id);
-  return reply.send({ eventId: id, rows: rows });
+  return reply.status(200).send({ eventId: id, rows: rows });
 }
