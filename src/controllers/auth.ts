@@ -2,10 +2,11 @@ import type { FastifyRequest, FastifyReply } from "fastify";
 import kaftaProducer from "../services/producer.service.ts";
 import { hashPassword } from "../utils/hash.ts";
 import { loginUser, fetchUser } from "../services/users.service.ts";
+import { createToken } from "../utils/jwt.ts";
 
 // GET	/auth/me	Obtener perfil del usuario autenticado
 export async function getProfile(request: FastifyRequest, reply: FastifyReply) {
-  const username = 'Hugo';
+  const username = "Hugo";
   const userInfo = await fetchUser(username);
   return reply.status(200).send({ email: `Your email is: ${userInfo?.email}` });
 }
@@ -31,7 +32,18 @@ export async function login(request: FastifyRequest, reply: FastifyReply) {
     password: string;
   };
   const userInfo = await loginUser({ username, password });
-  return reply.status(200).send({
-    message: `Hello ${userInfo.username} ! You have logged in successfully`,
+  if (!userInfo) {
+    return reply.status(401).send({ message: "Login failed" });
+  }
+  const tokenJWT = await createToken({
+    username: userInfo.username,
+    email: userInfo.email,
   });
+
+  return reply
+    .status(200)
+    .header("Authorization", "Bearer " + tokenJWT)
+    .send({
+      message: `Hello ${userInfo.username} ! You have logged in successfully`,
+    });
 }
