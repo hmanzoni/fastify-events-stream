@@ -3,9 +3,9 @@ import { chConfig } from '../config/ch.config.ts';
 import type { NodeClickHouseClient } from '@clickhouse/client/dist/client.js';
 
 const clientCH: NodeClickHouseClient = createClient({
-  host: `${chConfig.host}:${chConfig.user}`,
+  url: `http://${chConfig.host}:${chConfig.port}`,
   username: chConfig.user,
-  password: chConfig.pass,
+  password: chConfig.pass
 })
 
 export default clientCH;
