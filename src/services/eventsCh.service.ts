@@ -1,6 +1,6 @@
 import clientCH from "../utils/chouse.ts";
 
-export async function getTopEvents(limit: number) {
+export async function getTopEvents(limit: string = '10') {
   const rows = await clientCH.query({
     query: `SELECT COLUMNS('event_id'), COLUMNS('event_type'), toTypeName(COLUMNS('user_id')) FROM events LIMIT ${limit}`,
     format: 'JSONEachRow',
