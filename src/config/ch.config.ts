@@ -7,6 +7,7 @@ if (!envVars) {
 }
 
 export const chConfig = {
+  host: envVars?.CLICKHOUSE_HOST,
   pass: envVars?.CLICKHOUSE_PASSWORD,
   user: envVars?.CLICKHOUSE_USER,
   port: envVars?.CLICKHOUSE_PORT,
