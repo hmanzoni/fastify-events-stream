@@ -1,6 +1,6 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
 import kaftaProducer from "../services/producer.service.ts";
-import { getTopEvents, getEventById } from "../services/eventsCh.service.ts";
+import { getTopEvents, getEventById } from "../services/eventsDyn.service.ts";
 
 // POST	/events	Recibir eventos y enviarlos a Kafka
 export async function handleEvents( request: FastifyRequest, reply: FastifyReply ) {
@@ -18,7 +18,7 @@ export async function getRecents(request: FastifyRequest, reply: FastifyReply) {
   let limitEvents;
   const { topEvents } = request.query as { topEvents: string | undefined };
   limitEvents = topEvents || "10";
-  const rows = await getTopEvents(limitEvents);
+  const rows = await getTopEvents(+limitEvents);
   return reply.status(200).send({ topEvents: limitEvents, rows });
 }
 

@@ -1,12 +1,18 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
+import { getTopEvents, getEventById } from "../services/eventsCh.service.ts";
 
 // GET	/analytics/top-events	Obtener los eventos más frecuentes
 export async function events(request: FastifyRequest, reply: FastifyReply) {
-  return reply.send({ hello: "world, from /analytics/top-events" });
+  let limitEvents;
+  const { topEvents } = request.query as { topEvents: string | undefined };
+  limitEvents = topEvents || "10";
+  const rows = await getTopEvents(limitEvents);
+  return reply.status(200).send({ topEvents: limitEvents, rows });
 }
 
 // GET	/analytics/user/:id	Consultar eventos de un usuario específico
 export async function user(request: FastifyRequest, reply: FastifyReply) {
   const { id } = request.params as { id: string };
-  return reply.send({ hello: `world, from /analytics/user/${id}` });
+  const rows = await getEventById(id);
+  return reply.status(200).send({ eventId: id, rows: rows });
 }
