@@ -2,11 +2,15 @@ import type { FastifyRequest, FastifyReply } from "fastify";
 import kaftaProducer from "../services/producer.service.ts";
 import { hashPassword } from "../utils/hash.ts";
 import { loginUser, fetchUser } from "../services/users.service.ts";
-import { createToken } from "../utils/jwt.ts";
+import { createToken, verifyToken } from "../utils/jwt.ts";
 
 // GET	/auth/me	Obtener perfil del usuario autenticado
 export async function getProfile(request: FastifyRequest, reply: FastifyReply) {
-  const username = "Hugo";
+  const token = request.headers.authorization?.split(" ")[1];
+  if (!token) {
+    return reply.status(401).send({ message: "Unauthorized" });
+  }
+  const { username } = await verifyToken(token);
   const userInfo = await fetchUser(username);
   return reply.status(200).send({ email: `Your email is: ${userInfo?.email}` });
 }
