@@ -1,5 +1,5 @@
-import prisma from "../utils/prisma.util.ts";
-import { comparePassword } from "../utils/hash.util.ts";
+import prisma from "../utils/prisma.util.js";
+import { comparePassword } from "../utils/hash.util.js";
 
 export async function fetchUser(username: string) {
   const user = await prisma.users.findUnique({

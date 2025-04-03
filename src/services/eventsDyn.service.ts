@@ -6,8 +6,8 @@ import {
   type QueryCommandInput,
   type ScanCommandInput,
 } from "@aws-sdk/client-dynamodb";
-import dynDb from "../utils/dynamo.util.ts";
-import { dynConfig } from "../config/dynamo.config.ts";
+import dynDb from "../utils/dynamo.util.js";
+import { dynConfig } from "../config/dynamo.config.js";
 
 const { tableName } = dynConfig;
 

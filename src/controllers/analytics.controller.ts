@@ -1,5 +1,5 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
-import { getTopEvents, getEventById } from "../services/eventsCh.service.ts";
+import { getTopEvents, getEventById } from "../services/eventsCh.service.js";
 
 // GET	/analytics/top-events	Obtener los eventos más frecuentes
 export async function events(request: FastifyRequest, reply: FastifyReply) {

@@ -1,5 +1,5 @@
 import { Kafka } from "kafkajs";
-import { kafkaConfig } from "../config/kafka.config.ts";
+import { kafkaConfig } from "../config/kafka.config.js";
 
 const kafka: Kafka = new Kafka({
   clientId: kafkaConfig.appName_1,

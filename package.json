@@ -21,8 +21,6 @@
     "pg": "^8.14.1"
   },
   "devDependencies": {
-    "@tsconfig/node-ts": "^23.6.1",
-    "@tsconfig/node22": "^22.0.1",
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.13.14",

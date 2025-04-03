@@ -1,6 +1,6 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
-import kaftaProducer from "../services/producer.service.ts";
-import { getTopEvents, getEventById } from "../services/eventsDyn.service.ts";
+import kaftaProducer from "../services/producer.service.js";
+import { getTopEvents, getEventById } from "../services/eventsDyn.service.js";
 
 // POST	/events	Recibir eventos y enviarlos a Kafka
 export async function handleEvents( request: FastifyRequest, reply: FastifyReply ) {

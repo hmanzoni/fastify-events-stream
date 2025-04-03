@@ -1,4 +1,4 @@
-import prisma from "../utils/prisma.util.ts";
+import prisma from "../utils/prisma.util.js";
 
 export async function fetchLogs() {
   const logs = await prisma.event_logs.findMany({

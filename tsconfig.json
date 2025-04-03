@@ -1,9 +1,5 @@
 {
-  "extends": [
-    "@tsconfig/node22/tsconfig.json",
-    "@tsconfig/node-ts/tsconfig.json",
-    "fastify-tsconfig"
-  ],
+  "extends": "fastify-tsconfig",
   "compilerOptions": {
     "outDir": "dist",
     "sourceMap": true

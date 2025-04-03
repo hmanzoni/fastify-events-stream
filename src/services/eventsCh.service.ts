@@ -1,4 +1,4 @@
-import clientCH from "../utils/chouse.util.ts";
+import clientCH from "../utils/chouse.util.js";
 
 export async function getTopEvents(limit: string = '10') {
   const rows = await clientCH.query({
