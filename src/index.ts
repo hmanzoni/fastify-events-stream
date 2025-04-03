@@ -1,7 +1,7 @@
 import Fastify, { type FastifyInstance } from "fastify";
-import auth from "./routes/v1/auth.js";
-import events from "./routes/v1/events.js";
-import analytics from "./routes/v1/analytics.js";
+import auth from "./routes/v1/auth.route.js";
+import events from "./routes/v1/events.route.js";
+import analytics from "./routes/v1/analytics.route.js";
 
 const fastify: FastifyInstance = Fastify({
   logger: true,

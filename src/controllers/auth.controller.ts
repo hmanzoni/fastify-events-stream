@@ -1,8 +1,8 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
 import kaftaProducer from "../services/producer.service.ts";
-import { hashPassword } from "../utils/hash.ts";
+import { hashPassword } from "../utils/hash.util.ts";
 import { loginUser } from "../services/users.service.ts";
-import { createToken } from "../utils/jwt.ts";
+import { createToken } from "../utils/jwt.util.ts";
 
 // GET	/auth/me	Obtener perfil del usuario autenticado
 export async function getProfile(request: FastifyRequest, reply: FastifyReply) {

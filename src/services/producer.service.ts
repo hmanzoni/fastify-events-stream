@@ -1,7 +1,7 @@
 import { type Producer } from "kafkajs";
-import kafka from "../utils/kafka.ts";
+import kafka from "../utils/kafka.util.ts";
 import { kafkaConfig } from "../config/kafka.config.ts";
-import { log } from "../utils/logger.ts";
+import { log } from "../utils/logger.util.ts";
 
 // Create a producer instance
 const producer: Producer = kafka.producer();

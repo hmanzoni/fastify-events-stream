@@ -1,5 +1,5 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
-import { verifyToken } from "../utils/jwt.ts";
+import { verifyToken } from "../utils/jwt.util.ts";
 import { fetchUser } from "../services/users.service.ts";
 
 export async function authMiddleware(request: FastifyRequest, reply: FastifyReply) {

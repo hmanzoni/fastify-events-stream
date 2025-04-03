@@ -1,6 +1,6 @@
 import { type FastifyInstance } from "fastify";
-import { getProfile, register, login } from "../../controllers/auth.js";
-import { authMiddleware } from "../../middlewares/auth.ts";
+import { getProfile, register, login } from "../../controllers/auth.controller.js";
+import { authMiddleware } from "../../middlewares/auth.middleware.ts";
 
 async function routes(fastify: FastifyInstance) {
   // GET	/auth/me	Obtener perfil del usuario autenticado
