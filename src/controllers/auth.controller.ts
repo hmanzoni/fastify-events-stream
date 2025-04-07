@@ -17,7 +17,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     email: string;
   };
   const password_hash = await hashPassword(password);
-  await kaftaProducer({ username, password_hash, email });
+  await kaftaProducer({ username, password_hash, email, action_type: "create_user" });
   return reply.status(201).send({
     message: `User ${username} has been registered successfully`,
   });
@@ -43,5 +43,6 @@ export async function login(request: FastifyRequest, reply: FastifyReply) {
     .header("Authorization", "Bearer " + tokenJWT)
     .send({
       message: `Hello ${userInfo.username} ! You have logged in successfully`,
+      tokenJWT
     });
 }
