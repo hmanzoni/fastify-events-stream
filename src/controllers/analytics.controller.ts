@@ -1,5 +1,5 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
-import { getTopEvents, getEventById } from "../services/eventsCh.service.js";
+import { getTopEvents, getEventByUserId } from "../services/eventsCh.service.js";
 
 // GET	/analytics/top-events	Obtener los eventos más frecuentes
 export async function events(request: FastifyRequest, reply: FastifyReply) {
@@ -13,6 +13,6 @@ export async function events(request: FastifyRequest, reply: FastifyReply) {
 // GET	/analytics/user/:id	Consultar eventos de un usuario específico
 export async function user(request: FastifyRequest, reply: FastifyReply) {
   const { id } = request.params as { id: string };
-  const rows = await getEventById(id);
+  const rows = await getEventByUserId(id);
   return reply.status(200).send({ eventId: id, rows: rows });
 }
