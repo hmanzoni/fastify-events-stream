@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "npx tsx ./src/index.ts",
+    "consumer-up": "npx tsx ./src/consumers/kafka.consumer.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "type": "module",
