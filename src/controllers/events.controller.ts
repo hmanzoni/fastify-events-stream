@@ -4,13 +4,13 @@ import { getTopEvents, getEventById } from "../services/eventsDyn.service.js";
 
 // POST	/events	Recibir eventos y enviarlos a Kafka
 export async function handleEvents( request: FastifyRequest, reply: FastifyReply ) {
-  const { eventType, userId, metadata } = request.body as {
-    eventType: string;
-    userId: string;
+  const { event_type, user_id, metadata } = request.body as {
+    event_type: string;
+    user_id: string;
     metadata: any;
   };
-  kaftaProducer({ eventType, userId, metadata: JSON.stringify(metadata) });
-  return reply.status(201).send({response: "Event sent to Kafka", eventType, userId, metadata});
+  await kaftaProducer({ event_type, user_id, metadata: JSON.stringify(metadata), action_type: "save_logs" });
+  return reply.status(201).send({response: "Event sent to Kafka", event_type, user_id, metadata});
 }
 
 // GET	/events/recent	Obtener los últimos eventos registrados
