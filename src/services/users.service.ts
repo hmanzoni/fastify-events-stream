@@ -16,7 +16,7 @@ export const fetchUser = async (username: string) => {
   return user;
 };
 
-type RegisterUserData = {
+export type RegisterUserData = {
   username: string;
   password_hash: string;
   email: string;
