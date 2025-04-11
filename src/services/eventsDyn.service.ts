@@ -18,7 +18,7 @@ export const getTopEvents = async (limit: number = 10) => {
     Limit: limit,
   };
 
-  const command = new ScanCommand(params);
+  const command: ScanCommand = new ScanCommand(params);
   const response = await dynDb.send(command);
   return response.Items;
 };
@@ -35,7 +35,7 @@ export const getEventById = async (eventId: string) => {
     },
   };
 
-  const command = new QueryCommand(params);
+  const command: QueryCommand = new QueryCommand(params);
   const response = await dynDb.send(command);
   return response.Items;
 };
@@ -52,7 +52,7 @@ export const createEvent = async (eventId: string, userId: string) => {
     },
   };
 
-  const command = new PutItemCommand(params);
+  const command: PutItemCommand = new PutItemCommand(params);
   await dynDb.send(command);
   return { status: "success", message: "Event inserted successfully" };
 };

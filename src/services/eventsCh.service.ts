@@ -1,42 +1,59 @@
+import { type InsertParams, type QueryParams } from "@clickhouse/client";
 import clientCH from "../utils/chouse.util.js";
+import Stream from "stream";
 
-export async function getTopEvents(limit: string = '10') {
-  const rows = await clientCH.query({
-    query: `SELECT COLUMNS('event_id'), COLUMNS('user_id'), COLUMNS('event_type'), COLUMNS('timestamp') FROM events LIMIT ${limit}`,
-    format: 'JSONEachRow',
-  })
+export const getTopEvents = async (limit: string = "10") => {
+  const queryCols: string = "COLUMNS('event_id'), COLUMNS('user_id'), COLUMNS('event_type'), COLUMNS('timestamp')";
+  const queryCh: QueryParams = {
+    query: `SELECT ${queryCols} FROM events LIMIT ${limit}`,
+    format: "JSONEachRow",
+  };
+  const rows = await clientCH.query(queryCh);
   return await rows.json();
-}
+};
 
-export async function getAllUsersEvents() {
-  const rows = await clientCH.query({
-    query: "SELECT COLUMNS('event_id'), COLUMNS('user_id'), COLUMNS('event_type'), COLUMNS('timestamp') FROM events",
-    format: 'JSONEachRow',
-  })
+export const getAllUsersEvents = async () => {
+  const queryCols: string = "COLUMNS('event_id'), COLUMNS('user_id'), COLUMNS('event_type'), COLUMNS('timestamp')";
+  const queryCh: QueryParams = {
+    query: `SELECT ${queryCols} FROM events`,
+    format: "JSONEachRow",
+  };
+  const rows = await clientCH.query(queryCh);
   return await rows.json();
-}
+};
 
-export async function getEventById(id: string) {
-  const rows = await clientCH.query({
-    query: `SELECT COLUMNS('event_id'), COLUMNS('user_id'), COLUMNS('event_type'), COLUMNS('timestamp') FROM events WHERE event_id = '${id}'`,
-    format: 'JSONEachRow',
-  })
+export const getEventById = async (id: string) => {
+  const queryCols: string = "COLUMNS('event_id'), COLUMNS('user_id'), COLUMNS('event_type'), COLUMNS('timestamp')";
+  const queryCh: QueryParams = {
+    query: `SELECT ${queryCols} FROM events WHERE event_id = '${id}'`,
+    format: "JSONEachRow",
+  };
+  const rows = await clientCH.query(queryCh);
   return await rows.json();
-}
+};
 
-export async function getEventByUserId(id: string) {
-  const rows = await clientCH.query({
-    query: `SELECT COLUMNS('event_id'), COLUMNS('user_id'), COLUMNS('event_type'), COLUMNS('timestamp') FROM events WHERE user_id = '${id}'`,
-    format: 'JSONEachRow',
-  })
+export const getEventByUserId = async (id: string) => {
+  const queryCols: string = "COLUMNS('event_id'), COLUMNS('user_id'), COLUMNS('event_type'), COLUMNS('timestamp')";
+  const queryCh: QueryParams = {
+    query: `SELECT ${queryCols} FROM events WHERE user_id = '${id}'`,
+    format: "JSONEachRow",
+  };
+  const rows = await clientCH.query(queryCh);
   return await rows.json();
-}
+};
 
-export async function insertEvent(event: { event_type: string; user_id: string; metadata: string; }[]) {
-  await clientCH.insert({
-    table: 'events',
+type InsertEventData = {
+  event_type: string;
+  user_id: string;
+  metadata: string;
+}[];
+
+export const insertEvent = async (event: InsertEventData) => {
+  const queryCh: InsertParams<Stream.Readable> = {
+    table: "events",
     values: event,
-    format: 'JSONEachRow',
-  });
+    format: "JSONEachRow",
+  };
+  await clientCH.insert(queryCh);
   return { status: "success", message: "Event inserted successfully" };
-}
+};
