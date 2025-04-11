@@ -6,7 +6,15 @@ if (!envVars) {
   throw new Error("Error loading environment variables");
 }
 
-export const dynConfig = {
+type DynConfig = {
+  region: string;
+  protocol: string;
+  port: string;
+  host: string;
+  tableName: string;
+};
+
+export const dynConfig: DynConfig = {
   region: "us-east-1",
   protocol: envVars?.DYNAMODB_PROTOCOL || "http",
   port: envVars?.DYNAMODB_PORT || "8000",

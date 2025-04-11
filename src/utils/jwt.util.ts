@@ -1,25 +1,23 @@
 import jwt from "jsonwebtoken";
 import { jwtConfig } from "../config/jwt.config.js";
 
-export const createToken = async (user: { username: string; email: string; }) => {
-  const token = jwt.sign(
-    { username: user.username, email: user.email },
-    jwtConfig.jwtSecret,
-    {
-      expiresIn: "1h",
-    }
-  );
+type JwtPayload = {
+  username: string;
+  email: string;
+};
+
+const { jwtSecret, configOptions } = jwtConfig;
+
+export const createToken = async (user: JwtPayload) => {
+  const token = jwt.sign(user, jwtSecret, configOptions);
   return token;
 };
 
 export const verifyToken = async (token: string) => {
   try {
-    const decoded = jwt.verify(token, jwtConfig.jwtSecret) as {
-      username: string;
-      email: string;
-    };
+    const decoded = jwt.verify(token, jwtSecret) as JwtPayload;
     return decoded;
   } catch (error) {
     throw new Error("Invalid token");
   }
-}
+};

@@ -6,9 +6,16 @@ if (!envVars) {
   throw new Error("Error loading environment variables");
 }
 
-export const kafkaConfig = {
-  host_1: "localhost",
+type KafkaConfig = {
+  host_1: string;
+  port_1: string;
+  appName_1: string;
+  topicEvent_1: string;
+};
+
+export const kafkaConfig: KafkaConfig = {
+  host_1: envVars?.KAFKA_HOST || "localhost",
   port_1: envVars?.KAFKA_PORT || "9092",
-  appName_1: "my-app",
+  appName_1: envVars?.KAFKA_APP || "my-app",
   topicEvent_1: envVars?.KAFKA_TOPICS?.split(',')[0] || "events",
 };

@@ -6,9 +6,16 @@ if (!envVars) {
   throw new Error("Error loading environment variables");
 }
 
-export const pgConfig = {
-  pass: envVars?.POSTGRES_PASSWORD,
-  user: envVars?.POSTGRES_USER,
-  name: envVars?.POSTGRES_DB,
-  port: envVars?.POSTGRES_PORT,
+type PgConfig = {
+  pass: string;
+  user: string;
+  name: string;
+  port: string;
+};
+
+export const pgConfig: PgConfig = {
+  pass: envVars?.POSTGRES_PASSWORD || "P4SS_postgres",
+  user: envVars?.POSTGRES_USER || "USERpostgres",
+  name: envVars?.POSTGRES_DB || "events_stream",
+  port: envVars?.POSTGRES_PORT || "5432",
 };
