@@ -37,11 +37,11 @@ type LoginUserData = { username: string; password: string };
 
 export const loginUser = async (data: LoginUserData) => {
   const { username, password } = data;
-  const userInfo = await fetchUser(username);
+  const userInfo: UserPg = await fetchUser(username);
 
   if (!userInfo) throw new Error("User not found");
 
-  const passMatch = await comparePassword(password, userInfo.password_hash);
+  const passMatch: boolean = await comparePassword(password, userInfo.password_hash);
 
   if (!passMatch) throw new Error("Login failed");
 
