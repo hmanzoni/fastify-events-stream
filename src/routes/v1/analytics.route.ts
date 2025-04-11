@@ -1,11 +1,11 @@
 import type { FastifyInstance } from "fastify";
 import { events, user } from './../../controllers/analytics.controller.js';
 
-async function routes(fastify: FastifyInstance, options: Object) {
-  // GET	/analytics/top-events	Obtener los eventos más frecuentes
+const routes = async (fastify: FastifyInstance)  => {
+  // GET	/analytics/top-events	Get the most frequent events
   fastify.get("/top-events", events);
 
-  // GET	/analytics/user/:id	Consultar eventos de un usuario específico
+  // GET	/analytics/user/:id	Get the events from a specific user
   fastify.get("/user/:id", user);
 }
 

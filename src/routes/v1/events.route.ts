@@ -1,14 +1,14 @@
 import type { FastifyInstance } from "fastify";
 import { handleEvents, getRecents, getEvent } from "../../controllers/events.controller.js";
 
-async function routes(fastify: FastifyInstance, options: Object) {
-  // POST	/events	Recibir eventos y enviarlos a Kafka
+const routes = async (fastify: FastifyInstance) => {
+  // POST	/events	send logs events to Kafka
   fastify.post("/", handleEvents);
 
-  // GET	/events/recent	Obtener los últimos eventos registrados
+  // GET	/events/recent	Get the last events registered
   fastify.get("/recent", getRecents);
 
-  // GET	/events/:id	Obtener un evento específico
+  // GET	/events/:id get a specific event
   fastify.get("/:id", getEvent);
 }
 
