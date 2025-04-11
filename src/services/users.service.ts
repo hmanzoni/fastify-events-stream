@@ -1,7 +1,7 @@
 import prisma from "../utils/prisma.util.js";
 import { comparePassword } from "../utils/hash.util.js";
 
-type UserPg = {
+export type UserPg = {
   id: string;
   username: string;
   email: string;
