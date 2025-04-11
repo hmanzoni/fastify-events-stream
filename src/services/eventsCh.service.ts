@@ -42,13 +42,13 @@ export const getEventByUserId = async (id: string) => {
   return await rows.json();
 };
 
-type InsertEventData = {
+export type InsertEventData = {
   event_type: string;
   user_id: string;
   metadata: string;
-}[];
+};
 
-export const insertEvent = async (event: InsertEventData) => {
+export const insertEvent = async (event: InsertEventData[]) => {
   const queryCh: InsertParams<Stream.Readable> = {
     table: "events",
     values: event,
