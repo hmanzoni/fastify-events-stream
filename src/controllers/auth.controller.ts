@@ -1,15 +1,28 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
-import kaftaProducer from "../services/producer.service.js";
 import { hashPassword } from "../utils/hash.util.js";
-import { loginUser, UserPg } from "../services/users.service.js";
+import { loginUser, registerUser, RegisterUserData, UserPg } from "../services/users.service.js";
 import { createToken } from "../utils/jwt.util.js";
+import { UserSchema } from "../models/user.model.js";
+import { EventsEnumType } from "../models/event.model.js";
+import { DataLoggerKafka, KafkaLoggerProducer } from "../services/logger.service.js";
+
+const defaultUserId = "00000000-0000-0000-0000-000000000000";
 
 // GET	/auth/me	Get the profile of the logged-in user
 export const getProfile = async (request: FastifyRequest, reply: FastifyReply) => {
-  return reply
-    .status(200)
-    .send({ email: `Your email is: ${request.headers?.userEmail}` });
-}
+  const dataKafkaProducer: DataLoggerKafka = {request, userId: request.user.userId, serviceName: "user-fetch", actionType: EventsEnumType.getProfile, isSuccess: true}
+  try {
+    await KafkaLoggerProducer(dataKafkaProducer);
+    return reply
+      .status(200)
+      .send({ message: `Your email is: ${request.user.userEmail}` });
+  } catch (error) {
+    await KafkaLoggerProducer({...dataKafkaProducer, isSuccess: false});
+    return reply
+      .status(400)
+      .send({ message: `Error: ${error}` });
+  }
+};
 
 type RegisterBody = {
   username: string;
@@ -21,16 +34,33 @@ type RegisterBody = {
 export const register = async (request: FastifyRequest, reply: FastifyReply) => {
   const { username, password, email } = request.body as RegisterBody;
   const password_hash: string = await hashPassword(password);
-  await kaftaProducer({
+  const userRegister: RegisterUserData = UserSchema.parse({
     username,
-    password_hash,
+    password: password_hash,
     email,
-    action_type: "create_user",
   });
-  return reply.status(201).send({
-    message: `User ${username} has been registered successfully`,
-  });
-}
+  const dataKafkaProducer: DataLoggerKafka = {request, userId: userRegister.id, serviceName: "user-register", actionType: EventsEnumType.createUser, isSuccess: true};
+  try {
+    const resp = await registerUser(userRegister);
+    await KafkaLoggerProducer(dataKafkaProducer);
+    return reply.status(201).send({
+      message: `User ${resp.username} has been registered successfully`,
+    });
+  } catch (err: any) {
+    if (err.message.includes("User already exists")) {
+      await KafkaLoggerProducer({...dataKafkaProducer, serviceName: "user-register-exists", isSuccess: false});
+      console.warn("User already exists, continuing...");
+      return reply.status(409).send({
+        message: `User ${username} already exists`,
+      });
+    } else {
+      await KafkaLoggerProducer({...dataKafkaProducer, isSuccess: false});
+      return reply.status(400).send({
+        message: err.message,
+      });
+    }
+  }
+};
 
 type LoginBody = {
   username: string;
@@ -41,7 +71,10 @@ type LoginBody = {
 export const login = async (request: FastifyRequest, reply: FastifyReply) => {
   const { username, password } = request.body as LoginBody;
   const userInfo: UserPg = await loginUser({ username, password });
+  const dataKafkaProducer: DataLoggerKafka = {request, userId: userInfo.id, serviceName: "auth-login", actionType: EventsEnumType.loginUser, isSuccess: true};
+
   if (!userInfo) {
+    await KafkaLoggerProducer({...dataKafkaProducer, userId: defaultUserId, isSuccess: false});
     return reply.status(401).send({ message: "Login failed" });
   }
 
@@ -49,6 +82,7 @@ export const login = async (request: FastifyRequest, reply: FastifyReply) => {
     username: userInfo.username,
     email: userInfo.email,
   });
+  await KafkaLoggerProducer(dataKafkaProducer);
 
   return reply
     .status(200)
@@ -57,4 +91,4 @@ export const login = async (request: FastifyRequest, reply: FastifyReply) => {
       message: `Hello ${userInfo.username} ! You have logged in successfully`,
       tokenJWT,
     });
-}
+};
