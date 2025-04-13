@@ -2,13 +2,29 @@ import { type Producer } from "kafkajs";
 import kafka from "../utils/kafka.util.js";
 import { kafkaConfig } from "../config/kafka.config.js";
 import { logInfo, logError } from "../utils/logger.util.js";
+import { EnvMetadataKafka, EventsEnumType, ResourceTypeMetadataKafka, ResultMetadataKafka } from "../models/event.model.js";
 
 const producer: Producer = kafka.producer();
 
-// TODO: Define the type of your message
-type KafkaMessage = any;
+type EventMetaData = {
+  ip_address: string,
+  user_agent: string,
+  resource_type: ResourceTypeMetadataKafka,
+  timestamp: string,
+  result: ResultMetadataKafka,
+  service_name: string,
+  environment: EnvMetadataKafka,
+  version: string
+};
 
-const kaftaProducer = async (messages: KafkaMessage) => {
+export type EventKafkaData = {
+  event_id: string,
+  user_id: string,
+  action_type: EventsEnumType,
+  metadata: EventMetaData,
+};
+
+const kaftaProducer = async (messages: EventKafkaData) => {
   try {
     await producer.connect();
     logInfo("Producer connected");
