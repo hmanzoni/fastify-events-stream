@@ -17,6 +17,7 @@ export const fetchLogs = async () => {
 }
 
 export type SaveLogsData = {
+  event_id: string;
   event_type: string;
   user_id: string;
   metadata: any;

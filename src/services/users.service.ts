@@ -17,6 +17,7 @@ export const fetchUser = async (username: string) => {
 };
 
 export type RegisterUserData = {
+  id: string;
   username: string;
   password_hash: string;
   email: string;

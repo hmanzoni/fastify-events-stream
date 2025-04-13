@@ -109,14 +109,15 @@ const kafkaConsumerHandler = async (message: KafkaMessage) => {
 
   // Process action: create_user
   if (actionType === "create_user") {
-    const { username, password_hash, email } = eventValue;
-    await createUserHandler({ username, password_hash, email });
+    const { id, username, password_hash, email } = eventValue;
+    await createUserHandler({ id, username, password_hash, email });
   }
 
   // Process action: save_logs
   if (actionType === "save_logs") {
     const { event_type, user_id, metadata, event_id } = eventValue;
     await saveLogsHandler({
+      event_id,
       event_type,
       user_id,
       metadata,
@@ -126,6 +127,7 @@ const kafkaConsumerHandler = async (message: KafkaMessage) => {
 
   // Save events into ClickHouse
   await insertEventHandler({
+    event_id: eventValue.event_id,
     event_type: actionType,
     user_id: eventValue.user_id,
     metadata: JSON.stringify(eventValue),

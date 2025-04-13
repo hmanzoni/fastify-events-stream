@@ -41,6 +41,7 @@ export const getEventByUserId = async (id: string) => {
 };
 
 export type InsertEventData = {
+  event_id: string;
   event_type: string;
   user_id: string;
   metadata: string;
