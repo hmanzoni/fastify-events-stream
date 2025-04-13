@@ -1,6 +1,7 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
-import kaftaProducer from "../services/producer.service.js";
 import { getTopEvents, getEventById } from "../services/eventsDyn.service.js";
+import { DataLoggerKafka, KafkaLoggerProducer } from "../services/logger.service.js";
+import { EventsEnumType } from "../models/event.model.js";
 
 type HandleEventsBody = {
   event_type: string;
@@ -11,26 +12,42 @@ type HandleEventsBody = {
 // POST	/events	send logs events to Kafka
 export const handleEvents = async ( request: FastifyRequest, reply: FastifyReply ) =>{
   const { event_type, user_id, metadata } = request.body as HandleEventsBody;
-  await kaftaProducer({ event_type, user_id, metadata: JSON.stringify(metadata), action_type: "save_logs" });
+  const dataKafkaProducer: DataLoggerKafka = {request, userId: user_id, serviceName: "create-events", actionType: EventsEnumType.saveLogs, isSuccess: true};
+  await KafkaLoggerProducer(dataKafkaProducer);
   return reply.status(201).send({response: "Event sent to Kafka", event_type, user_id, metadata});
 }
 
-type GetRecentsBody = { topEvents: string | undefined }
+type GetRecentsQuery = { topEvents: string | undefined }
 
 // GET	/events/recent	Get the last events registered
 export const getRecents = async (request: FastifyRequest, reply: FastifyReply) =>{
   let limitEvents: string;
-  const { topEvents } = request.query as GetRecentsBody;
+  const { topEvents } = request.query as GetRecentsQuery;
+
   limitEvents = topEvents || "10";
-  const rows = await getTopEvents(+limitEvents);
-  return reply.status(200).send({ topEvents: limitEvents, rows });
+  const dataKafkaProducer: DataLoggerKafka = {request, userId: request.user.userId, serviceName: "recent-events", actionType: EventsEnumType.saveLogs, isSuccess: true};
+  try {
+    const rows = await getTopEvents(+limitEvents);
+    await KafkaLoggerProducer(dataKafkaProducer);
+    return reply.status(200).send({ topEvents: limitEvents, rows });
+  } catch (error) {
+    await KafkaLoggerProducer({...dataKafkaProducer, isSuccess: false});
+    return reply.status(500).send({ message: error });
+  }
 }
 
-type GetEventBody = { id: string }
+type GetEventParams = { id: string }
 
 // GET	/events/:id get a specific event
 export const getEvent = async (request: FastifyRequest, reply: FastifyReply) =>{
-  const { id } = request.params as GetEventBody;
-  const rows = await getEventById(id);
-  return reply.status(200).send({ eventId: id, rows: rows });
+  const { id } = request.params as GetEventParams;
+  const dataKafkaProducer: DataLoggerKafka = {request, userId: request.user.userId, serviceName: "get-event", actionType: EventsEnumType.saveLogs, isSuccess: true};
+  try {
+    const rows = await getEventById(id);
+    await KafkaLoggerProducer(dataKafkaProducer);
+    return reply.status(200).send({ eventId: id, rows: rows });
+  } catch (error) {
+    await KafkaLoggerProducer({...dataKafkaProducer, isSuccess: false});
+    return reply.status(500).send({ message: error });
+  }
 }
