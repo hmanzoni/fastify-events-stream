@@ -5,17 +5,18 @@ import {
   type Consumer,
 } from "kafkajs";
 import { kafkaConfig } from "../config/kafka.config.js";
-import { registerUser, RegisterUserData } from "../services/users.service.js";
 import { saveLogs, SaveLogsData } from "../services/logs.service.js";
 import { createEvent } from "../services/eventsDyn.service.js";
 import { insertEvent, InsertEventData } from "../services/eventsCh.service.js";
 import { logInfo, logError } from "../utils/logger.util.js";
+import { EventKafkaData } from "../services/producer.service.js";
 
 const kafka: Kafka = new Kafka({
   clientId: kafkaConfig.appName_1,
   brokers: [`${kafkaConfig.host_1}:${kafkaConfig.port_1}`],
 });
 
+// Initialize Kafka consumer
 const initConsumer = async (groupName: string) => {
   // Create instance of Kafka consumer
   const consumer: Consumer = kafka.consumer({
@@ -33,9 +34,9 @@ const initConsumer = async (groupName: string) => {
   }
 };
 
+// Subscribe to the topic
 const subscribeTopic = async (consumer: Consumer) => {
   try {
-    // Subscribe to the topic
     await consumer.subscribe({
       topic: kafkaConfig.topicEvent_1,
       fromBeginning: true,
@@ -45,22 +46,6 @@ const subscribeTopic = async (consumer: Consumer) => {
     logError("Error subscribeTopic: ");
     console.error(err);
     throw err;
-  }
-};
-
-const createUserHandler = async (eventValueRegUser: RegisterUserData) => {
-  try {
-    const resp = await registerUser(eventValueRegUser);
-    logInfo("User register successfully");
-    console.log(resp);
-  } catch (err: any) {
-    if (err.message.includes("User already exists")) {
-      console.warn("User already exists, continuing...");
-    } else {
-      logError("Error createUserHandler: ");
-      console.error(err);
-      throw err;
-    }
   }
 };
 
@@ -104,33 +89,23 @@ const insertEventHandler = async (eventChData: InsertEventData) => {
 const kafkaConsumerHandler = async (message: KafkaMessage) => {
   if (!message.value) return "error: message.value is undefined";
 
-  const eventValue = JSON.parse(message.value.toString());
-  const actionType = eventValue?.action_type;
+  const eventValue: EventKafkaData = JSON.parse(message.value.toString());
 
-  // Process action: create_user
-  if (actionType === "create_user") {
-    const { id, username, password_hash, email } = eventValue;
-    await createUserHandler({ id, username, password_hash, email });
-  }
-
-  // Process action: save_logs
-  if (actionType === "save_logs") {
-    const { event_type, user_id, metadata, event_id } = eventValue;
-    await saveLogsHandler({
-      event_id,
-      event_type,
-      user_id,
-      metadata,
-    });
-    await saveEventType(event_id, user_id);
-  }
+  const { action_type, user_id, metadata, event_id } = eventValue;
+  await saveLogsHandler({
+    event_id,
+    event_type: action_type,
+    user_id,
+    metadata,
+  });
+  await saveEventType(event_id, user_id);
 
   // Save events into ClickHouse
   await insertEventHandler({
-    event_id: eventValue.event_id,
-    event_type: actionType,
-    user_id: eventValue.user_id,
-    metadata: JSON.stringify(eventValue),
+    event_id,
+    event_type: action_type,
+    user_id,
+    metadata: JSON.stringify(eventValue.metadata),
   });
 };
 
@@ -159,3 +134,4 @@ const kafkaConsumer = async (groupName: string = "default") => {
 
 // Start the consumer
 kafkaConsumer("test_group");
+
