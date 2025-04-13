@@ -3,9 +3,16 @@ import { uuidv7 } from "uuidv7";
 
 export enum EventsEnumType {
   createUser = "create_user",
-  saveLogs = "save_logs",
+  getProfile = "get_user_profile",
+  deleteUser = "delete_user",
+  loginUser = "login_user",
+  logoutUser = "logout_user",
   createEvent = "create_event",
-  deleteUser = "delete_user"
+  saveLogs = "save_logs",
+  topEvents = "top_events",
+  analyticsUser = "analytics_user",
+  recentEvents = "recent_events",
+  getEvent = "get_event",
 }
 
 export enum ResultMetadataKafka {
@@ -16,6 +23,7 @@ export enum ResourceTypeMetadataKafka {
   auth = "auth",
   events = "events",
   user = "user",
+  analytics = "analytics",
 }
 export enum EnvMetadataKafka {
   dev = "dev",
@@ -33,7 +41,7 @@ const IdSchema = z.string().uuid("Invalid user ID");
 
 // This schema defines the structure of an event object.
 export const EventLogPgSchema = z.object({
-  id: EventIdSchema,
+  id: IdSchema,
   user_id: IdSchema,
   event_type: EventTypeEnum,
   timestamp: TimeStampSchema,
@@ -54,18 +62,20 @@ export const EventLogDynSchema = z.object({
   timestamp: TimeStampSchema
 });
 
+export const EventMetadaKafkaSchema = z.object({
+  ip_address: z.string().ip(),
+  user_agent: z.string(),
+  resource_type: z.nativeEnum(ResourceTypeMetadataKafka),
+  timestamp: TimeStampSchema,
+  result: z.nativeEnum(ResultMetadataKafka),
+  service_name: z.string(),
+  environment: z.nativeEnum(EnvMetadataKafka),
+  version: z.string()
+});
+
 export const EventKafkaDataSchema = z.object({
-  event_id: IdSchema,
+  event_id: EventIdSchema,
   user_id: IdSchema,
   action_type: EventTypeEnum,
-  metadata: z.object({
-    ip_address: z.string().ip(),
-    user_agent: z.string(),
-    resource_type: z.nativeEnum(ResourceTypeMetadataKafka),
-    timestamp: TimeStampSchema,
-    result: z.nativeEnum(ResultMetadataKafka),
-    service_name: z.string(),
-    environment: z.nativeEnum(EnvMetadataKafka),
-    version: z.string()
-  })
+  metadata: EventMetadaKafkaSchema
 });
