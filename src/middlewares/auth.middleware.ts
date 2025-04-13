@@ -16,8 +16,10 @@ export const authMiddleware = async (request: FastifyRequest, reply: FastifyRepl
       if (!userInfo) {
         return reply.status(401).send({ message: "Unauthorized" });
       }
-
-      request.headers.userEmail = userInfo.email;
+      request.user = { 
+        userId: userInfo.id, 
+        userEmail: userInfo.email 
+      };
     } catch (error) {
       return reply.status(401).send({ message: "Unauthorized" });
     }
