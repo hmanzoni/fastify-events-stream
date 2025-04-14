@@ -24,13 +24,13 @@ export type RegisterUserData = {
 };
 
 export const registerUser = async (data: RegisterUserData) => {
-  const { username, password_hash, email } = data;
+  const { id, username, password_hash, email } = data;
   const userInfo = await fetchUser(username);
 
   if (userInfo) throw new Error("User already exists");
 
   return await prisma.users.create({
-    data: { username, email, password_hash },
+    data: { id, username, email, password_hash },
   });
 };
 
