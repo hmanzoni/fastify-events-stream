@@ -1,19 +1,9 @@
-import { type FastifyRequest } from "fastify";
 import {
   EventKafkaDataSchema,
-  EventsEnumType,
-  ResourceTypeMetadataKafka,
-  ResultMetadataKafka,
 } from "../models/event.model.js";
-import kaftaProducer, { EventKafkaData } from "./producer.service.js";
-
-export type DataLoggerKafka = {
-  request: FastifyRequest;
-  userId: string;
-  serviceName: string;
-  actionType: EventsEnumType;
-  isSuccess: boolean;
-}
+import kaftaProducer from "./producer.service.js";
+import { DataLoggerKafka, EventKafkaData } from "../types/events/kafka.js";
+import { EventsEnumType, ResourceTypeMetadataKafka, ResultMetadataKafka } from "../types/events/event.enum.js";
 
 const actionToResourceMap: Record<EventsEnumType, ResourceTypeMetadataKafka> = {
   [EventsEnumType.createUser]: ResourceTypeMetadataKafka.user,

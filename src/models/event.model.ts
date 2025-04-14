@@ -1,35 +1,6 @@
 import { z } from "zod";
 import { uuidv7 } from "uuidv7";
-
-export enum EventsEnumType {
-  createUser = "create_user",
-  getProfile = "get_user_profile",
-  deleteUser = "delete_user",
-  loginUser = "login_user",
-  logoutUser = "logout_user",
-  createEvent = "create_event",
-  saveLogs = "save_logs",
-  topEvents = "top_events",
-  analyticsUser = "analytics_user",
-  recentEvents = "recent_events",
-  getEvent = "get_event",
-}
-
-export enum ResultMetadataKafka {
-  success = "success",
-  failure = "failure",
-}
-export enum ResourceTypeMetadataKafka {
-  auth = "auth",
-  events = "events",
-  user = "user",
-  analytics = "analytics",
-}
-export enum EnvMetadataKafka {
-  dev = "dev",
-  stage = "stage",
-  prod = "prod",
-}
+import { EnvMetadataKafka, EventsEnumType, ResourceTypeMetadataKafka, ResultMetadataKafka } from "../types/events/event.enum.js";
 
 const EventTypeEnum = z.nativeEnum(EventsEnumType);
 

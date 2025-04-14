@@ -1,26 +1,12 @@
 import prisma from "../utils/prisma.util.js";
 import { comparePassword } from "../utils/hash.util.js";
-
-export type UserPg = {
-  id: string;
-  username: string;
-  email: string;
-  password_hash: string;
-  created_at: Date | null;
-} | null;
+import { LoginUserData, RegisterUserData, UserPg } from "../types/users/users.js";
 
 export const fetchUser = async (username: string) => {
   const user: UserPg = await prisma.users.findUnique({
     where: { username },
   });
   return user;
-};
-
-export type RegisterUserData = {
-  id: string;
-  username: string;
-  password_hash: string;
-  email: string;
 };
 
 export const registerUser = async (data: RegisterUserData) => {
@@ -33,8 +19,6 @@ export const registerUser = async (data: RegisterUserData) => {
     data: { id, username, email, password_hash },
   });
 };
-
-type LoginUserData = { username: string; password: string };
 
 export const loginUser = async (data: LoginUserData) => {
   const { username, password } = data;

@@ -1,13 +1,5 @@
-import { type JsonValue } from "../../generated/prisma/runtime/library.js";
+import { EventLogPg, SaveLogsData } from "../types/events/events.js";
 import prisma from "../utils/prisma.util.js";
-
-type EventLogPg = {
-  id: string;
-  event_type: string;
-  user_id: string;
-  timestamp: Date | null;
-  metadata: JsonValue | null;
-}[] | null;
 
 export const fetchLogs = async () => {
   const logs: EventLogPg = await prisma.event_logs.findMany({
@@ -16,12 +8,6 @@ export const fetchLogs = async () => {
   return logs;
 }
 
-export type SaveLogsData = {
-  event_id: string;
-  event_type: string;
-  user_id: string;
-  metadata: any;
-};
 
 export const saveLogs = async (data: SaveLogsData) => {
   const { event_id, event_type, user_id, metadata } = data;

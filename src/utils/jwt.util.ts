@@ -1,10 +1,6 @@
 import jwt from "jsonwebtoken";
 import { jwtConfig } from "../config/jwt.config.js";
-
-type JwtPayload = {
-  username: string;
-  email: string;
-};
+import { JwtPayload } from "../types/common/utils.js";
 
 const { jwtSecret, configOptions } = jwtConfig;
 

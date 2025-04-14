@@ -1,10 +1,12 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
 import { hashPassword } from "../utils/hash.util.js";
-import { loginUser, registerUser, RegisterUserData, UserPg } from "../services/users.service.js";
+import { loginUser, registerUser } from "../services/users.service.js";
 import { createToken } from "../utils/jwt.util.js";
 import { UserSchema } from "../models/user.model.js";
-import { EventsEnumType } from "../models/event.model.js";
-import { DataLoggerKafka, KafkaLoggerProducer } from "../services/logger.service.js";
+import { KafkaLoggerProducer } from "../services/logger.service.js";
+import { DataLoggerKafka } from "../types/events/kafka.js";
+import { LoginBody, RegisterBody, RegisterUserData, UserPg } from "../types/users/users.js";
+import { EventsEnumType } from "../types/events/event.enum.js";
 
 const defaultUserId = "00000000-0000-0000-0000-000000000000";
 
@@ -22,12 +24,6 @@ export const getProfile = async (request: FastifyRequest, reply: FastifyReply) =
       .status(400)
       .send({ message: `Error: ${error}` });
   }
-};
-
-type RegisterBody = {
-  username: string;
-  password: string;
-  email: string;
 };
 
 // POST	/auth/register	Registrer a new user
@@ -60,11 +56,6 @@ export const register = async (request: FastifyRequest, reply: FastifyReply) => 
       });
     }
   }
-};
-
-type LoginBody = {
-  username: string;
-  password: string;
 };
 
 // POST	/auth/login	Login user and get the token JWT

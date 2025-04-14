@@ -1,9 +1,9 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
 import { getTopEvents, getEventByUserId } from "../services/eventsCh.service.js";
-import { DataLoggerKafka, KafkaLoggerProducer } from "../services/logger.service.js";
-import { EventsEnumType } from "../models/event.model.js";
-
-type TopEventsQuery = { topEvents: string | undefined };
+import { KafkaLoggerProducer } from "../services/logger.service.js";
+import { DataLoggerKafka } from "../types/events/kafka.js";
+import { EventsEnumType } from "../types/events/event.enum.js";
+import { TopEventsQuery, UserIdParams } from "../types/events/events.js";
 
 // GET	/analytics/top-events	Get the most frequent events
 export const events = async (request: FastifyRequest, reply: FastifyReply) => {
@@ -26,8 +26,6 @@ export const events = async (request: FastifyRequest, reply: FastifyReply) => {
     return reply.status(500).send({ message: error });
   }
 };
-
-type UserIdParams = { id: string };
 
 // GET	/analytics/user/:id	Get the events from a specific user
 export const user = async (request: FastifyRequest, reply: FastifyReply) => {

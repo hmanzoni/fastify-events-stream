@@ -1,17 +1,11 @@
 import {config, type DotenvParseOutput} from 'dotenv';
+import { PgConfig } from '../types/common/envConfig.js';
 
 const envVars: DotenvParseOutput | undefined = config().parsed;
 
 if (!envVars) {
   throw new Error("Error loading environment variables");
 }
-
-type PgConfig = {
-  pass: string;
-  user: string;
-  name: string;
-  port: string;
-};
 
 export const pgConfig: PgConfig = {
   pass: envVars?.POSTGRES_PASSWORD || "P4SS_postgres",

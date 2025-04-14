@@ -1,11 +1,9 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
 import { getTopEvents, getEventById } from "../services/eventsDyn.service.js";
-import { DataLoggerKafka, KafkaLoggerProducer } from "../services/logger.service.js";
-import { EventsEnumType } from "../models/event.model.js";
-
-type HandleEventsBody = {
-  serviceName: string;
-}
+import { KafkaLoggerProducer } from "../services/logger.service.js";
+import { DataLoggerKafka } from "../types/events/kafka.js";
+import { EventsEnumType } from "../types/events/event.enum.js";
+import { GetEventParams, GetRecentsQuery, HandleEventsBody } from "../types/events/events.js";
 
 // POST	/events	send logs events to Kafka
 export const handleEvents = async ( request: FastifyRequest, reply: FastifyReply ) =>{
@@ -14,8 +12,6 @@ export const handleEvents = async ( request: FastifyRequest, reply: FastifyReply
   await KafkaLoggerProducer(dataKafkaProducer);
   return reply.status(201).send({response: "Event sent to Kafka", serviceName: dataKafkaProducer.serviceName});
 }
-
-type GetRecentsQuery = { topEvents: string | undefined }
 
 // GET	/events/recent	Get the last events registered
 export const getRecents = async (request: FastifyRequest, reply: FastifyReply) =>{
@@ -33,8 +29,6 @@ export const getRecents = async (request: FastifyRequest, reply: FastifyReply) =
     return reply.status(500).send({ message: error });
   }
 }
-
-type GetEventParams = { id: string }
 
 // GET	/events/:id get a specific event
 export const getEvent = async (request: FastifyRequest, reply: FastifyReply) =>{

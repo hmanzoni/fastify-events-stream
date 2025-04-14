@@ -5,11 +5,12 @@ import {
   type Consumer,
 } from "kafkajs";
 import { kafkaConfig } from "../config/kafka.config.js";
-import { saveLogs, SaveLogsData } from "../services/logs.service.js";
+import { saveLogs } from "../services/logs.service.js";
 import { createEvent } from "../services/eventsDyn.service.js";
-import { insertEvent, InsertEventData } from "../services/eventsCh.service.js";
+import { insertEvent } from "../services/eventsCh.service.js";
 import { logInfo, logError } from "../utils/logger.util.js";
-import { EventKafkaData } from "../services/producer.service.js";
+import { InsertEventData, SaveLogsData } from "../types/events/events.js";
+import { EventKafkaData } from "../types/events/kafka.js";
 
 const kafka: Kafka = new Kafka({
   clientId: kafkaConfig.appName_1,

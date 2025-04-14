@@ -1,6 +1,7 @@
 import { type InsertParams, type QueryParams } from "@clickhouse/client";
 import clientCH from "../utils/chouse.util.js";
 import Stream from "stream";
+import { InsertEventData } from "../types/events/events.js";
 
 const queryDefaultCols: string = "COLUMNS('event_id'), COLUMNS('user_id'), COLUMNS('event_type'), COLUMNS('timestamp')";
 
@@ -38,13 +39,6 @@ export const getEventByUserId = async (id: string) => {
   };
   const rows = await clientCH.query(queryCh);
   return await rows.json();
-};
-
-export type InsertEventData = {
-  event_id: string;
-  event_type: string;
-  user_id: string;
-  metadata: string;
 };
 
 export const insertEvent = async (event: InsertEventData[]) => {
