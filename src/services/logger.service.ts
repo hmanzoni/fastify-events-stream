@@ -48,11 +48,10 @@ const createKafkaEventData = (dataLogger: DataLoggerKafka) => {
       ip_address: request.ip,
       user_agent: request.headers["user-agent"],
       resource_type: resourceType,
-      timestamp: new Date().toISOString(),
       result: resultApi,
       service_name: serviceName,
-      environment: process.env.ENVIRONMENT,
-      version: process.env.VERSION,
+      environment: process.env.ENVIRONMENT || "dev",
+      version: process.env.VERSION || "1.0.0",
     },
   });
   return kafkaEvent;
