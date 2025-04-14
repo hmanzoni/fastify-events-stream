@@ -11,11 +11,13 @@ type KafkaConfig = {
   port_1: string;
   appName_1: string;
   topicEvent_1: string;
+  topicGroup_1: string;
 };
 
 export const kafkaConfig: KafkaConfig = {
   host_1: envVars?.KAFKA_HOST || "localhost",
   port_1: envVars?.KAFKA_PORT || "9092",
   appName_1: envVars?.KAFKA_APP || "my-app",
-  topicEvent_1: envVars?.KAFKA_TOPICS?.split(',')[0] || "events",
+  topicEvent_1: envVars?.KAFKA_TOPICS || "events",
+  topicGroup_1: envVars?.KAFKA_GROUPID || "events",
 };
