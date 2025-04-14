@@ -9,7 +9,7 @@ datasource db {
 }
 
 model event_logs {
-  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String    @id @db.Uuid
   event_type String    @db.VarChar(50)
   user_id    String    @db.Uuid
   timestamp  DateTime? @default(now()) @db.Timestamp(6)
@@ -18,7 +18,7 @@ model event_logs {
 }
 
 model users {
-  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id            String       @id @db.Uuid
   username      String       @unique @db.VarChar(50)
   email         String       @unique @db.VarChar(100)
   password_hash String
