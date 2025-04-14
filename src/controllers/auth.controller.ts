@@ -36,7 +36,7 @@ export const register = async (request: FastifyRequest, reply: FastifyReply) => 
   const password_hash: string = await hashPassword(password);
   const userRegister: RegisterUserData = UserSchema.parse({
     username,
-    password: password_hash,
+    password_hash,
     email,
   });
   const dataKafkaProducer: DataLoggerKafka = {request, userId: userRegister.id, serviceName: "user-register", actionType: EventsEnumType.createUser, isSuccess: true};
@@ -48,13 +48,13 @@ export const register = async (request: FastifyRequest, reply: FastifyReply) => 
     });
   } catch (err: any) {
     if (err.message.includes("User already exists")) {
-      await KafkaLoggerProducer({...dataKafkaProducer, serviceName: "user-register-exists", isSuccess: false});
+      await KafkaLoggerProducer({...dataKafkaProducer, userId: defaultUserId, serviceName: "user-register-exists", isSuccess: false});
       console.warn("User already exists, continuing...");
       return reply.status(409).send({
         message: `User ${username} already exists`,
       });
     } else {
-      await KafkaLoggerProducer({...dataKafkaProducer, isSuccess: false});
+      await KafkaLoggerProducer({...dataKafkaProducer, userId: defaultUserId, isSuccess: false});
       return reply.status(400).send({
         message: err.message,
       });
