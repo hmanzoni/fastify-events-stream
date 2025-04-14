@@ -1,15 +1,15 @@
 CREATE TABLE users (
-    id SERIAL PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW()
+    created_at TIMESTAMP
 );
 
 CREATE TABLE event_logs (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY,
     event_type VARCHAR(50) NOT NULL,
-    user_id INT REFERENCES users(id),
-    timestamp TIMESTAMP DEFAULT NOW(),
+    user_id UUID REFERENCES users(id),
+    timestamp TIMESTAMP,
     metadata JSONB
 );
