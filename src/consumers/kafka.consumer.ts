@@ -133,5 +133,5 @@ const kafkaConsumer = async (groupName: string = "default") => {
 };
 
 // Start the consumer
-kafkaConsumer("test_group");
+kafkaConsumer(kafkaConfig.topicGroup_1);
 
