@@ -4,9 +4,14 @@
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
-    "start": "npx tsx ./src/index.ts",
+    "ts-start": "npx tsx ./src/index.ts",
+    "start": "node dist/index.js",
     "consumer-up": "npx tsx ./src/consumers/kafka.consumer.ts",
+    "prisma-generate": "npx prisma db push",
     "generate-db": "npx prisma db push",
+    "build": "tsc",
+    "create-dDb-table": "npx tsx ./docker/dynamodb/create-table.ts",
+    "clean": "rm -rf dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "type": "module",
