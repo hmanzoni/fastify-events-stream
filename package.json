@@ -6,11 +6,12 @@
   "scripts": {
     "ts-start": "npx tsx ./src/index.ts",
     "start": "node dist/index.js",
-    "consumer-up": "npx tsx ./src/consumers/kafka.consumer.ts",
+    "ts-consumer-up": "npx tsx ./src/consumers/kafka.consumer.ts",
+    "consumer-up": "node dist/consumers/kafka.consumer.js",
     "prisma-generate": "npx prisma db push",
     "generate-db": "npx prisma db push",
     "build": "tsc",
-    "create-dDb-table": "npx tsx ./docker/dynamodb/create-table.ts",
+    "create-dDb-table": "node ./docker/dynamodb/create-table.js",
     "clean": "rm -rf dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
