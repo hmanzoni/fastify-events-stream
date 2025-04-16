@@ -13,3 +13,11 @@ CREATE TABLE event_logs (
     timestamp TIMESTAMP,
     metadata JSONB
 );
+
+INSERT INTO users VALUES (
+    '00000000-0000-0000-0000-000000000000', 
+    'no-user', 
+    'no-user@undefined.com', 
+    '$2b$10$kN7Icw8937Qb5vWKHz6Q3uO2yuBwJomLjjVSWIqnAbGLlQQrqa1n2', 
+    CURRENT_TIMESTAMP
+);
