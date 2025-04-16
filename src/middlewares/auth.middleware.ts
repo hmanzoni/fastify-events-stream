@@ -1,7 +1,8 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
 import { verifyToken } from "../utils/jwt.util.js";
-import { fetchUser, type  UserPg } from "../services/users.service.js";
+import { fetchUser } from "../services/users.service.js";
 import { JwtPayload } from "jsonwebtoken";
+import { UserPg } from "../types/users/users.js";
 
 export const authMiddleware = async (request: FastifyRequest, reply: FastifyReply)  =>{
     const tokenAuth: string | undefined = request.headers?.authorization;
