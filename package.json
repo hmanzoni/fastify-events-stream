@@ -6,8 +6,8 @@
   "scripts": {
     "ts-start": "npx tsx ./src/index.ts",
     "start": "node dist/index.js",
-    "ts-consumer-up": "npx tsx ./src/consumers/kafka.consumer.ts",
-    "consumer-up": "node dist/consumers/kafka.consumer.js",
+    "ts-consumer-up": "npx tsx ./src/consumers/index.ts",
+    "consumer-up": "node dist/consumers/index.js",
     "prisma-generate": "npx prisma db push",
     "generate-db": "npx prisma db push",
     "build": "tsc",
