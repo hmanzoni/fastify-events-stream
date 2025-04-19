@@ -14,4 +14,6 @@ export const dynConfig: DynConfig = {
   port: envVars?.DYNAMODB_PORT || "8000",
   host: envVars?.DYNAMODB_HOST || "localhost",	
   tableName: envVars?.DYNAMODB_TABLE || "events",	
+  accessKeyId: envVars?.DYNAMODB_KEY_ID || "fakeAccessKeyId",	
+  secretAccessKey: envVars?.DYNAMODB_SECRET_KEY || "fakeSecretAccessKey",	
 };
