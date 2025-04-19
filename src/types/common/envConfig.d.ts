@@ -1,4 +1,3 @@
-
 import { type SignOptions } from "jsonwebtoken";
 
 export interface ClickHouseConfig {
@@ -6,7 +5,7 @@ export interface ClickHouseConfig {
   pass: string;
   user: string;
   port: string;
-};
+}
 
 export interface DynConfig {
   region: string;
@@ -14,12 +13,14 @@ export interface DynConfig {
   port: string;
   host: string;
   tableName: string;
-};
+  accessKeyId: string;
+  secretAccessKey: string;
+}
 
 export interface JwtConfig {
-  jwtSecret: string ;
+  jwtSecret: string;
   configOptions: SignOptions;
-};
+}
 
 export interface KafkaConfig {
   host_1: string;
@@ -27,11 +28,11 @@ export interface KafkaConfig {
   appName_1: string;
   topicEvent_1: string;
   topicGroup_1: string;
-};
+}
 
 export interface PgConfig {
   pass: string;
   user: string;
   name: string;
   port: string;
-};
+}

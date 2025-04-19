@@ -18,11 +18,11 @@ export interface EventMetaData {
   service_name: string,
   environment: EnvMetadataKafka,
   version: string
-};
+}
 
 export interface EventKafkaData {
   event_id: string,
   user_id: string,
   action_type: EventsEnumType,
   metadata: EventMetaData,
-};
+}

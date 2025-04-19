@@ -1,10 +1,10 @@
-export * from "./events/event.enum.ts"
-export * from "./events/events.d.ts"
-export * from "./events/kafka.ts"
+export * from "./events/event.enum.js"
+export * from "./events/events.d.js"
+export * from "./events/kafka.js"
 
-export * from "./users/users.d.ts"
+export * from "./users/users.d.js"
 
-export * from "./common/envConfig.d.ts"
-export * from "./common/utils.d.ts"
+export * from "./common/envConfig.d.js"
+export * from "./common/utils.d.js"
 
-export * from "./fastify.d.ts"
+export * from "./fastify.d.js"
