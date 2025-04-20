@@ -10,8 +10,13 @@ const fastify: FastifyInstance = Fastify({
 fastify.register(auth, { prefix: "/api/v1/auth" });
 fastify.register(events, { prefix: "/api/v1/events" });
 fastify.register(analytics, { prefix: "/api/v1/analytics" });
+fastify.get('/', async (request, reply) => {
+  return { message: 'Hello world!' }
+});
 
-fastify.listen({ port: 3000 }, function (err, address) {
+const { ADDRESS = 'localhost', PORT = '3000' } = process.env;
+
+fastify.listen({ host: ADDRESS, port: parseInt(PORT, 10) }, function (err, address) {
   if (err) {
     fastify.log.error(err);
     process.exit(1);
