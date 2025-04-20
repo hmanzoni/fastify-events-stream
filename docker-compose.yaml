@@ -56,11 +56,42 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:${KAFKA_PORT}
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${KAFKA_HOST}:9092,PLAINTEXT_HOST://${KAFKA_HOST}:${KAFKA_PORT}
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TOPICS: ${KAFKA_TOPICS} # list of topics Comma-separated to create
-    command: sh -c "((sleep 15 && bash /docker-entrypoint-initdb.d/init.sh)&) && /etc/confluent/docker/run ">
+    command: >
+      sh -c "((sleep 15 && bash /docker-entrypoint-initdb.d/init.sh)&) && /etc/confluent/docker/run"
     volumes:
       - ./docker/kafka/init.sh:/docker-entrypoint-initdb.d/init.sh
+
+  fastify:
+    build:
+      context: .
+      dockerfile: ./docker/app/DockerfileApp
+    ports:
+      - ${FASTIFY_PORT}:${FASTIFY_PORT}
+    environment:
+      NODE_ENV: development
+      ENVIRONMENT: dev
+      VERSION: 1.0.0
+      PORT: ${FASTIFY_PORT}
+      ADDRESS: ${FASTIFY_HOST}
+    depends_on:
+      - postgres
+      - dynamodb
+      - clickhouse
+      - kafka
+
+  consumer:
+    build:
+      context: .
+      dockerfile: ./docker/app/DockerfileConsumer
+    environment:
+      NODE_ENV: development
+      ENVIRONMENT: dev
+      VERSION: 1.0.0
+    depends_on:
+      - postgres
+      - kafka
