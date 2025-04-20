@@ -195,9 +195,9 @@ You can use Postman or any HTTP client to test endpoints. Kafka events can be ob
 - [ ] Add refresh token logic
 - [ ] Handle the already exist error in the consumer
 - [ ] Add OpenAPI (Swagger) docs
-- [ ] Make modular the consumer
-- [ ] Create docker for run the API
-- [ ] Create docker for run the consumer
+- [✅] Make modular the consumer
+- [✅] Create docker for run the API
+- [✅] Create docker for run the consumer
 
 ---
 
