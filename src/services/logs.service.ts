@@ -10,10 +10,10 @@ export const fetchLogs = async () => {
 
 
 export const saveLogs = async (data: SaveLogsData) => {
-  const { event_id, event_type, user_id, metadata } = data;
+  const { id, event_type, user_id, metadata } = data;
   return await prisma.event_logs.create({
     data: {
-      id: event_id,
+      id,
       event_type,
       user_id,
       metadata,

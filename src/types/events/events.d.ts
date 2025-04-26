@@ -18,7 +18,7 @@ interface EventLog {
 export type EventLogPg = EventLog[] | null;
 
 export interface SaveLogsData {
-  event_id: string;
+  id: string;
   event_type: string;
   user_id: string;
   metadata: any;
