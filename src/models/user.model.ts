@@ -15,7 +15,7 @@ const IdSchema = z.string().uuid().optional().transform(() => uuidv7());
 // This schema defines the structure of an user object.
 export const UserSchema = z.object({
   id: IdSchema,
-  username: z.string().min(3, "Username must be at least 3 characters long"),
+  username: z.string().trim().min(3, "Username must be at least 3 characters long"),
   email: z.string().email("Invalid email address"),
   password_hash: PasswordHashSchema,
   created_at: TimeStampSchema,
