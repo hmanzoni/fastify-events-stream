@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 echo "⏳ Waiting for PostgreSQL..."
 bash /wait-for-it.sh $POSTGRES_HOST:$POSTGRES_PORT --timeout=30 --strict -- echo "PostgreSQL is up!"
