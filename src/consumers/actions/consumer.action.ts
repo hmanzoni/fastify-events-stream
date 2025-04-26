@@ -10,19 +10,23 @@ export const messageHandler = async (message: KafkaMessage) => {
   const eventValue: EventKafkaData = JSON.parse(message.value.toString());
 
   const { action_type, user_id, metadata, event_id } = eventValue;
-  await saveLogsHandler({
-    event_id,
-    event_type: action_type,
-    user_id,
-    metadata,
-  });
-  await saveEventTypeHandler(event_id, user_id);
-
-  // Save events into ClickHouse
-  await insertEventHandler({
-    event_id,
-    event_type: action_type,
-    user_id,
-    metadata: JSON.stringify(eventValue.metadata),
-  });
+  try {
+    await saveLogsHandler({
+      id: event_id,
+      event_type: action_type,
+      user_id,
+      metadata,
+    });
+    await saveEventTypeHandler(event_id, user_id);
+  
+    // Save events into ClickHouse
+    await insertEventHandler({
+      event_id,
+      event_type: action_type,
+      user_id,
+      metadata: JSON.stringify(eventValue.metadata),
+    });
+  } catch (error) {
+    console.error(error);
+  }
 };
