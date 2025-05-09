@@ -7,21 +7,22 @@ import { KafkaLoggerProducer } from "../services/logger.service.js";
 import { DataLoggerKafka } from "../types/events/kafka.js";
 import { LoginBody, RegisterBody, RegisterUserData, UserPg } from "../types/users/users.js";
 import { EventsEnumType } from "../types/events/event.enum.js";
+import { UnauthorizedError, UserAlreadyExistError, UserNotFoundError } from "../errors/AuthErrors.js";
 
 const defaultUserId = "00000000-0000-0000-0000-000000000000";
 
 // GET	/auth/me	Get the profile of the logged-in user
 export const getProfile = async (request: FastifyRequest, reply: FastifyReply) => {
-  const dataKafkaProducer: DataLoggerKafka = {request, userId: request.user.userId, serviceName: "user-fetch", actionType: EventsEnumType.getProfile, isSuccess: true}
+  const dataKafkaProducer: DataLoggerKafka = {request, userId: defaultUserId, serviceName: "user-fetch", actionType: EventsEnumType.getProfile, isSuccess: true}
   try {
-    await KafkaLoggerProducer(dataKafkaProducer);
+    await KafkaLoggerProducer({...dataKafkaProducer, userId: request.user.userId});
     return reply
       .status(200)
       .send({ message: `Your email is: ${request.user.userEmail}` });
   } catch (error) {
-    await KafkaLoggerProducer({...dataKafkaProducer, isSuccess: false});
+    await KafkaLoggerProducer({...dataKafkaProducer, serviceName: "user-fetch-error", isSuccess: false});
     return reply
-      .status(400)
+      .status(401)
       .send({ message: `Error: ${error}` });
   }
 };
@@ -42,44 +43,55 @@ export const register = async (request: FastifyRequest, reply: FastifyReply) => 
     return reply.status(201).send({
       message: `User ${resp.username} has been registered successfully`,
     });
-  } catch (err: any) {
-    if (err.message.includes("User already exists")) {
-      await KafkaLoggerProducer({...dataKafkaProducer, userId: defaultUserId, serviceName: "user-register-exists", isSuccess: false});
-      console.warn("User already exists, continuing...");
-      return reply.status(409).send({
-        message: `User ${username} already exists`,
-      });
-    } else {
-      await KafkaLoggerProducer({...dataKafkaProducer, userId: defaultUserId, isSuccess: false});
-      return reply.status(400).send({
-        message: err.message,
-      });
+  } catch (error) {
+    let message: string = "Internal server error";
+    let serviceName: string = "user-register-internal-error";
+    let statusCode: number = 500;
+    if (error instanceof UserAlreadyExistError) {
+      message = error.message;
+      serviceName = "user-register-exists"
+      statusCode = error.statusCode;
     }
+    await KafkaLoggerProducer({...dataKafkaProducer, userId: defaultUserId, serviceName, isSuccess: false});
+    return reply.status(statusCode).send({message});
   }
 };
 
 // POST	/auth/login	Login user and get the token JWT
 export const login = async (request: FastifyRequest, reply: FastifyReply) => {
   const { username, password } = request.body as LoginBody;
-  const userInfo: UserPg = await loginUser({ username, password });
-  const dataKafkaProducer: DataLoggerKafka = {request, userId: userInfo.id, serviceName: "auth-login", actionType: EventsEnumType.loginUser, isSuccess: true};
+  const dataKafkaProducer: DataLoggerKafka = {request, userId: defaultUserId, serviceName: "auth-login", actionType: EventsEnumType.loginUser, isSuccess: true};
+  try {
+    const userInfo: UserPg = await loginUser({ username, password });
 
-  if (!userInfo) {
-    await KafkaLoggerProducer({...dataKafkaProducer, userId: defaultUserId, isSuccess: false});
-    return reply.status(401).send({ message: "Login failed" });
-  }
-
-  const tokenJWT: string = await createToken({
-    username: userInfo.username,
-    email: userInfo.email,
-  });
-  await KafkaLoggerProducer(dataKafkaProducer);
-
-  return reply
-    .status(200)
-    .header("Authorization", "Bearer " + tokenJWT)
-    .send({
-      message: `Hello ${userInfo.username} ! You have logged in successfully`,
-      tokenJWT,
+    const tokenJWT: string = await createToken({
+      username: userInfo.username,
+      email: userInfo.email,
     });
+    await KafkaLoggerProducer({...dataKafkaProducer, userId: userInfo.id});
+
+    return reply
+      .status(200)
+      .send({
+        message: `Hello ${userInfo.username} ! You have logged in successfully`,
+        token: tokenJWT,
+      });
+  } catch (error) {
+    let serviceName: string = "auth-login-internal-error";
+    let message: string = "Internal server error";
+    let statusCode: number = 500;
+    if (error instanceof UserNotFoundError) {
+      serviceName = "auth-login-not-found";
+      statusCode = error.statusCode;
+      message = error.message;
+    }
+    if (error instanceof UnauthorizedError) {
+      serviceName = "auth-login-unauthorized";
+      statusCode = error.statusCode;
+      message = error.message;
+    }
+    const dataKafkaProducer: DataLoggerKafka = {request, userId: defaultUserId, serviceName, actionType: EventsEnumType.loginUser, isSuccess: false};
+    await KafkaLoggerProducer(dataKafkaProducer);
+    return reply.status(statusCode).send({ message });
+  }
 };
