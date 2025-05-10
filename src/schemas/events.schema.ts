@@ -4,7 +4,7 @@ const description500 = "Internal Server Error";
 
 export const eventsSchema = {
   description: "Send custom events endpoint",
-  tags: ["auth"],
+  tags: ["events"],
   summary: "Create custom logs events",
   body: {
     type: "object",
@@ -48,7 +48,7 @@ export const eventsSchema = {
 
 export const getRecentsSchema = {
   description: "Get the last events registered",
-  tags: ["analytics"],
+  tags: ["events"],
   summary: "Get the last events registered in DynamoDB",
   querystring: {
     type: "object",
@@ -92,7 +92,7 @@ export const getRecentsSchema = {
 
 export const getEventSchema = {
   description: "Get an event endpoint",
-  tags: ["analytics"],
+  tags: ["events"],
   summary: "Get a specific event from DynamoDB",
   params: {
     type: "object",
