@@ -9,8 +9,13 @@ import { GetEventParams, GetRecentsQuery, HandleEventsBody } from "../types/even
 export const handleEvents = async ( request: FastifyRequest, reply: FastifyReply ) =>{
   const { serviceName } = request.body as HandleEventsBody;
   const dataKafkaProducer: DataLoggerKafka = {request, userId: request.user.userId, serviceName: `create-event-${serviceName}`, actionType: EventsEnumType.saveLogs, isSuccess: true};
-  await KafkaLoggerProducer(dataKafkaProducer);
-  return reply.status(201).send({response: "Event sent to Kafka", serviceName: dataKafkaProducer.serviceName});
+  try {
+    await KafkaLoggerProducer(dataKafkaProducer);
+    return reply.status(201).send({message: "Event sent to Kafka", serviceName: dataKafkaProducer.serviceName});
+  } catch (error) {
+    await KafkaLoggerProducer({...dataKafkaProducer, isSuccess: false});
+    return reply.status(500).send({ message: error });
+  }
 }
 
 // GET	/events/recent	Get the last events registered
@@ -23,7 +28,7 @@ export const getRecents = async (request: FastifyRequest, reply: FastifyReply) =
   try {
     const rows = await getTopEvents(+limitEvents);
     await KafkaLoggerProducer(dataKafkaProducer);
-    return reply.status(200).send({ topEvents: limitEvents, rows });
+    return reply.status(200).send({ message: "Successful retrieving the last events", topEvents: limitEvents, rows });
   } catch (error) {
     await KafkaLoggerProducer({...dataKafkaProducer, isSuccess: false});
     return reply.status(500).send({ message: error });
@@ -37,7 +42,7 @@ export const getEvent = async (request: FastifyRequest, reply: FastifyReply) =>{
   try {
     const rows = await getEventById(id);
     await KafkaLoggerProducer(dataKafkaProducer);
-    return reply.status(200).send({ eventId: id, rows: rows });
+    return reply.status(200).send({ message: "Successful retrieving the event", eventId: id, rows: rows });
   } catch (error) {
     await KafkaLoggerProducer({...dataKafkaProducer, isSuccess: false});
     return reply.status(500).send({ message: error });
