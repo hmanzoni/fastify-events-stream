@@ -13,7 +13,15 @@ const fastify: FastifyInstance = Fastify({
   logger: true,
 });
 
-fastify.register(swagger, swaggerIndex);
+const swaggerConfig = {
+  ...swaggerIndex,
+  swagger: {
+    ...swaggerIndex.swagger,
+    host: `${ADDRESS}:${PORT}`,
+  },
+};
+
+fastify.register(swagger, swaggerConfig);
 fastify.register(swaggerUI, {
   routePrefix: "/docs",
   uiConfig: {
