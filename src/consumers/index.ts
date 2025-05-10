@@ -28,8 +28,7 @@ const kafkaConsumer = async (groupName: string = "default") => {
       },
     });
   } catch (err) {
-    logError("Error trying to run the consumer");
-    console.error(err);
+    logError("Error trying to run the consumer ", err);
     throw err;
   }
 };

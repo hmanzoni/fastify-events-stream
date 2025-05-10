@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { jwtConfig } from "../config/jwt.config.js";
 import { JwtPayload } from "../types/common/utils.js";
+import { ForbiddenError } from "../errors/AuthErrors.js";
 
 const { jwtSecret, configOptions } = jwtConfig;
 
@@ -14,6 +15,6 @@ export const verifyToken = async (token: string) => {
     const decoded = jwt.verify(token, jwtSecret) as JwtPayload;
     return decoded;
   } catch (error) {
-    throw new Error("Invalid token");
+    throw new ForbiddenError("Invalid token");
   }
 };

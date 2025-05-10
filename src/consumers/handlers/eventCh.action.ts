@@ -6,11 +6,9 @@ export const insertEventHandler = async (eventChData: InsertEventData) => {
   // Save events into ClickHouse
   try {
     const resp = await insertEvent([eventChData]);
-    logInfo("Event has been saved correctly in ClickHouse");
-    console.log(resp);
+    logInfo("Event has been saved correctly in ClickHouse", resp);
   } catch (err) {
-    logError("Error insertEventHandler: ");
-    console.error(err);
+    logError("Error insertEventHandler: ", err);
     throw err;
   }
 };
