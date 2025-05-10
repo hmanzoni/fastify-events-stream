@@ -8,6 +8,7 @@ import { swaggerIndex } from "./schemas/index.schema.js";
 
 const { ADDRESS = "localhost", PORT = "3000" } = process.env;
 const portNum: number = parseInt(PORT, 10);
+const addressHost: string = ADDRESS == "0.0.0.0" ? "localhost" : ADDRESS;
 
 const fastify: FastifyInstance = Fastify({
   logger: true,
@@ -17,7 +18,7 @@ const swaggerConfig = {
   ...swaggerIndex,
   swagger: {
     ...swaggerIndex.swagger,
-    host: `${ADDRESS}:${PORT}`,
+    host: `${addressHost}:${PORT}`,
   },
 };
 
