@@ -20,7 +20,7 @@ const kaftaProducer = async (messages: EventKafkaData) => {
     await producer.disconnect();
     logInfo("Producer disconnected");
   } catch (err) {
-    logError(JSON.stringify(err));
+    logError("Error kaftaProducer: ", err);
   }
 };
 

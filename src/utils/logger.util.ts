@@ -1,3 +1,3 @@
-export const logInfo = (message: string) => console.log(`[LOG] ${message}`);
+export const logInfo = (message: string, other: any = {}) => console.log(`[LOG] ${message}`, other);
 
-export const logError = (message: string) => console.error(`[ERROR] ${message}`);
+export const logError = (message: string, error: any = {}) => console.error(`[ERROR] ${message}`, error);

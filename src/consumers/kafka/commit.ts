@@ -9,8 +9,7 @@ export const commitTopic = async (consumer: Consumer, commitData: CommitData) =>
     await consumer.commitOffsets([{ topic, partition, offset: newOffset }]);
     logInfo("Topic commited successfully");
   } catch (err) {
-    logError("Error commitTopic: ");
-    console.error(err);
+    logError("Error commitTopic: ", err);
     throw err;
   }
 };

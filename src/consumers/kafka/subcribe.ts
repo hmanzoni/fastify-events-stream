@@ -10,8 +10,7 @@ export const subscribeTopic = async (consumer: Consumer) => {
     });
     logInfo("Topic subscribed successfully");
   } catch (err) {
-    logError("Error subscribeTopic: ");
-    console.error(err);
+    logError("Error subscribeTopic: ", err);
     throw err;
   }
 };

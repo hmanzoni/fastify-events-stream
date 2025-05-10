@@ -19,8 +19,7 @@ export const initConsumer = async (groupName: string) => {
     logInfo("Consumer connected successfully");
     return consumer;
   } catch (err) {
-    logError("Error initConsumer: ");
-    console.error(err);
+    logError("Error initConsumer: ", err);
     throw err;
   }
 };
