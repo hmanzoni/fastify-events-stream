@@ -22,7 +22,7 @@ export const loginSchema = {
       type: "object",
       properties: {
         message: { type: "string" },
-        tokenJWT: { type: "string" },
+        token: { type: "string" },
       },
     },
     401: {
