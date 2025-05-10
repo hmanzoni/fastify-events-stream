@@ -1,3 +1,9 @@
+const description401 = "Unauthorized access";
+const description403 = "Forbidden access";
+const description404 = "User not found";
+const description409 = "User already exists";
+const description500 = "Internal Server Error";
+
 export const loginSchema = {
   description: "User login endpoint",
   tags: ["auth"],
@@ -20,21 +26,21 @@ export const loginSchema = {
       },
     },
     401: {
-      description: "Unauthorized",
+      description: description401,
       type: "object",
       properties: {
         message: { type: "string" },
       },
     },
     404: {
-      description: "NotFound",
+      description: description404,
       type: "object",
       properties: {
         message: { type: "string" },
       },
     },
     500: {
-      description: "InternalServerError",
+      description: description500,
       type: "object",
       properties: {
         message: { type: "string" },
@@ -65,21 +71,21 @@ export const registerSchema = {
       },
     },
     403: {
-      description: "Forbidden",
+      description: description403,
       type: "object",
       properties: {
         message: { type: "string" },
       },
     },
     409: {
-      description: "UserAlreadyExist",
+      description: description409,
       type: "object",
       properties: {
         message: { type: "string" },
       },
     },
     500: {
-      description: "InternalServerError",
+      description: description500,
       type: "object",
       properties: {
         message: { type: "string" },
@@ -101,14 +107,14 @@ export const getProfileSchema = {
       },
     },
     403: {
-      description: "Forbidden",
+      description: description403,
       type: "object",
       properties: {
         message: { type: "string" },
       },
     },
     500: {
-      description: "InternalServerError",
+      description: description500,
       type: "object",
       properties: {
         message: { type: "string" },
