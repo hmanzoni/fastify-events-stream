@@ -20,7 +20,7 @@ export const events = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const rows = await getTopEvents(limitEvents);
     await KafkaLoggerProducer(dataKafkaProducer);
-    return reply.status(200).send({ topEvents: limitEvents, rows });
+    return reply.status(200).send({ message: "Successful retrieving the last events", topEvents: limitEvents, rows });
   } catch (error) {
     await KafkaLoggerProducer({ ...dataKafkaProducer, isSuccess: false });
     return reply.status(500).send({ message: error });
@@ -40,7 +40,7 @@ export const user = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const rows = await getEventByUserId(id);
     await KafkaLoggerProducer(dataKafkaProducer);
-    return reply.status(200).send({ eventId: id, rows: rows });
+    return reply.status(200).send({ message: "Successful retrieving the event from a user", userId: id, rows: rows });
   } catch (error) {
     await KafkaLoggerProducer({ ...dataKafkaProducer, isSuccess: false });
     return reply.status(500).send({ message: error });
