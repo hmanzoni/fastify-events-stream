@@ -7,7 +7,7 @@ import { KafkaLoggerProducer } from "../services/logger.service.js";
 import { DataLoggerKafka } from "../types/events/kafka.js";
 import { LoginBody, RegisterBody, RegisterUserData, UserPg } from "../types/users/users.js";
 import { EventsEnumType } from "../types/events/event.enum.js";
-import { UnauthorizedError, UserAlreadyExistError, UserNotFoundError } from "../errors/AuthErrors.js";
+import { ForbiddenError, UnauthorizedError, UserAlreadyExistError, UserNotFoundError } from "../errors/AuthErrors.js";
 
 const defaultUserId = "00000000-0000-0000-0000-000000000000";
 
@@ -16,14 +16,18 @@ export const getProfile = async (request: FastifyRequest, reply: FastifyReply) =
   const dataKafkaProducer: DataLoggerKafka = {request, userId: defaultUserId, serviceName: "user-fetch", actionType: EventsEnumType.getProfile, isSuccess: true}
   try {
     await KafkaLoggerProducer({...dataKafkaProducer, userId: request.user.userId});
-    return reply
-      .status(200)
-      .send({ message: `Your email is: ${request.user.userEmail}` });
+    return reply.status(200).send({ message: `Your email is: ${request.user.userEmail}` });
   } catch (error) {
-    await KafkaLoggerProducer({...dataKafkaProducer, serviceName: "user-fetch-error", isSuccess: false});
-    return reply
-      .status(401)
-      .send({ message: `Error: ${error}` });
+    let message: string = "Internal server error";
+    let serviceName: string = "user-fetch-internal-error";
+    let statusCode: number = 500;
+    if (error instanceof ForbiddenError) {
+      message = error.message;
+      serviceName = "user-fetch-forbidden";
+      statusCode = error.statusCode;
+    }
+    await KafkaLoggerProducer({...dataKafkaProducer, serviceName, isSuccess: false});
+    return reply.status(statusCode).send({ message });
   }
 };
 
