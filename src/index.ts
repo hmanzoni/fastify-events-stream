@@ -4,7 +4,7 @@ import swaggerUI from "@fastify/swagger-ui";
 import auth from "./routes/v1/auth.route.js";
 import events from "./routes/v1/events.route.js";
 import analytics from "./routes/v1/analytics.route.js";
-import { swaggerIndex } from "./schemas/index.schema.js";
+import { swaggerIndex, swaggerUiConfig } from "./schemas/index.schema.js";
 
 const { ADDRESS = "localhost", PORT = "3000" } = process.env;
 const portNum: number = parseInt(PORT, 10);
@@ -23,19 +23,15 @@ const swaggerConfig = {
 };
 
 fastify.register(swagger, swaggerConfig);
-fastify.register(swaggerUI, {
-  routePrefix: "/docs",
-  uiConfig: {
-    docExpansion: "full",
-    deepLinking: false,
-  },
-});
+fastify.register(swaggerUI, swaggerUiConfig);
 
 fastify.register(auth, { prefix: "/api/v1/auth" });
 fastify.register(events, { prefix: "/api/v1/events" });
 fastify.register(analytics, { prefix: "/api/v1/analytics" });
 fastify.get("/", async (request, reply) => {
-  return { message: "Hello world!" };
+  return {
+    message: `Hi! Welcome to Fastify Events Stream. You can test all the API endpoints at the following ${swaggerConfig.swagger.host}${swaggerUiConfig.routePrefix}`,
+  };
 });
 
 fastify.listen({ host: ADDRESS, port: portNum }, function (err, address) {
