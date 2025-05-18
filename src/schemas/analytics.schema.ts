@@ -1,11 +1,14 @@
-const description401 = "Unauthorized access";
-const description403 = "Forbidden access";
-const description500 = "Internal Server Error";
+import { FastifySchema } from "fastify";
+import { headersJsonSchema } from "./headers.schema.js";
+import { errorResponseSchema } from "./response.schema.js";
 
-export const eventsSchema = {
+const tags = ["analytics"];
+
+export const eventsSchema: FastifySchema = {
   description: "Frequent events endpoint",
-  tags: ["analytics"],
+  tags,
   summary: "Get the most frequent events in Clickhouse",
+  headers: headersJsonSchema,
   querystring: {
     type: "object",
     properties: {
@@ -13,42 +16,22 @@ export const eventsSchema = {
     },
   },
   response: {
+    ...errorResponseSchema,
     200: {
       description: "Successful get top events",
       type: "object",
       properties: {
         message: { type: "string" },
         topEvents: { type: "string" },
-        rows: { type: "object" },
-      },
-    },
-    403: {
-      description: description403,
-      type: "object",
-      properties: {
-        message: { type: "string" },
-      },
-    },
-    401: {
-      description: description401,
-      type: "object",
-      properties: {
-        message: { type: "string" },
-      },
-    },
-    500: {
-      description: description500,
-      type: "object",
-      properties: {
-        message: { type: "string" },
+        rows: { type: "array" },
       },
     },
   },
 };
 
-export const userSchema = {
+export const userSchema: FastifySchema = {
   description: "Get user events endpoint",
-  tags: ["analytics"],
+  tags,
   summary: "Get the events from a specific user",
   params: {
     type: "object",
@@ -56,35 +39,16 @@ export const userSchema = {
       id: { type: "string" },
     },
   },
+  headers: headersJsonSchema,
   response: {
+    ...errorResponseSchema,
     200: {
       description: "Successful get events from user",
       type: "object",
       properties: {
         message: { type: "string" },
         userId: { type: "string" },
-        rows: { type: "object" },
-      },
-    },
-    403: {
-      description: description403,
-      type: "object",
-      properties: {
-        message: { type: "string" },
-      },
-    },
-    401: {
-      description: description401,
-      type: "object",
-      properties: {
-        message: { type: "string" },
-      },
-    },
-    500: {
-      description: description500,
-      type: "object",
-      properties: {
-        message: { type: "string" },
+        rows: { type: "array" },
       },
     },
   },
