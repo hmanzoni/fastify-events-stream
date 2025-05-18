@@ -1,12 +1,12 @@
-const description401 = "Unauthorized access";
-const description403 = "Forbidden access";
-const description404 = "User not found";
-const description409 = "User already exists";
-const description500 = "Internal Server Error";
+import { FastifySchema } from "fastify";
+import { headersJsonSchema } from "./headers.schema.js";
+import { errorResponseSchema } from "./response.schema.js";
 
-export const loginSchema = {
+const tags = ["auth"];
+
+export const loginSchema: FastifySchema = {
   description: "User login endpoint",
-  tags: ["auth"],
+  tags,
   summary: "Log in a user",
   body: {
     type: "object",
@@ -17,6 +17,7 @@ export const loginSchema = {
     },
   },
   response: {
+    ...errorResponseSchema,
     200: {
       description: "Successful login",
       type: "object",
@@ -25,33 +26,12 @@ export const loginSchema = {
         token: { type: "string" },
       },
     },
-    401: {
-      description: description401,
-      type: "object",
-      properties: {
-        message: { type: "string" },
-      },
-    },
-    404: {
-      description: description404,
-      type: "object",
-      properties: {
-        message: { type: "string" },
-      },
-    },
-    500: {
-      description: description500,
-      type: "object",
-      properties: {
-        message: { type: "string" },
-      },
-    },
   },
 };
 
-export const registerSchema = {
+export const registerSchema: FastifySchema = {
   description: "User register endpoint",
-  tags: ["auth"],
+  tags,
   summary: "Register a new user",
   body: {
     type: "object",
@@ -63,29 +43,9 @@ export const registerSchema = {
     },
   },
   response: {
+    ...errorResponseSchema,
     201: {
       description: "Successful registration",
-      type: "object",
-      properties: {
-        message: { type: "string" },
-      },
-    },
-    403: {
-      description: description403,
-      type: "object",
-      properties: {
-        message: { type: "string" },
-      },
-    },
-    409: {
-      description: description409,
-      type: "object",
-      properties: {
-        message: { type: "string" },
-      },
-    },
-    500: {
-      description: description500,
       type: "object",
       properties: {
         message: { type: "string" },
@@ -94,27 +54,15 @@ export const registerSchema = {
   },
 };
 
-export const getProfileSchema = {
+export const getProfileSchema: FastifySchema = {
   description: "Get user information endpoint",
-  tags: ["auth"],
+  tags,
   summary: "Get user information",
+  headers: headersJsonSchema,
   response: {
+    ...errorResponseSchema,
     200: {
       description: "Successful get profile",
-      type: "object",
-      properties: {
-        message: { type: "string" },
-      },
-    },
-    403: {
-      description: description403,
-      type: "object",
-      properties: {
-        message: { type: "string" },
-      },
-    },
-    500: {
-      description: description500,
       type: "object",
       properties: {
         message: { type: "string" },
