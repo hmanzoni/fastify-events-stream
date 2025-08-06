@@ -1,7 +1,7 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
 import { hashPassword } from "../utils/hash.util.js";
 import { loginUser, registerUser } from "../services/users.service.js";
-import { createToken } from "../utils/jwt.util.js";
+import { createToken, verifyToken } from "../utils/jwt.util.js";
 import { UserSchema } from "../models/user.model.js";
 import { KafkaLoggerProducer } from "../services/logger.service.js";
 import { DataLoggerKafka } from "../types/events/kafka.js";
@@ -68,10 +68,9 @@ export const login = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const userInfo: UserPg = await loginUser({ username, password });
 
-    const tokenJWT: string = await createToken({
-      username: userInfo.username,
-      email: userInfo.email,
-    });
+    const tokenJWT: string = await createToken({ username: userInfo.username });
+    const refreshTokenJWT: string = await createToken({ username: userInfo.username }, true);
+
     await KafkaLoggerProducer({...dataKafkaProducer, userId: userInfo.id});
 
     return reply
@@ -79,6 +78,7 @@ export const login = async (request: FastifyRequest, reply: FastifyReply) => {
       .send({
         message: `Hello ${userInfo.username} ! You have logged in successfully`,
         token: tokenJWT,
+        refreshToken: refreshTokenJWT,
       });
   } catch (error) {
     let serviceName: string = "auth-login-internal-error";
@@ -98,4 +98,11 @@ export const login = async (request: FastifyRequest, reply: FastifyReply) => {
     await KafkaLoggerProducer(dataKafkaProducer);
     return reply.status(statusCode).send({ message });
   }
+};
+
+export const refresh_token = async (request: FastifyRequest, reply: FastifyReply) => {
+  const refreshToken = request.headers.refreshToken as string;
+  const payload = await verifyToken(refreshToken);
+  const newAccessToken = createToken({ username: payload.username });
+  reply.send({ accessToken: newAccessToken });
 };
