@@ -18,8 +18,10 @@ export interface DynConfig {
 }
 
 export interface JwtConfig {
-  jwtSecret: string;
-  configOptions: SignOptions;
+  jwtLoginSecret: string;
+  jwtRefreshSecret: string;
+  configRefreshOptions: SignOptions;
+  configLoginOptions: SignOptions;
 }
 
 export interface KafkaConfig {

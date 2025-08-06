@@ -9,8 +9,12 @@ if (!envVars) {
 }
 
 export const jwtConfig: JwtConfig = {
-  jwtSecret: envVars?.JWT_SECRET || "defaultSecret",
-  configOptions: {
-    expiresIn: "1h"
+  jwtLoginSecret: envVars?.JWT_LOGIN_SECRET || "defaultSecret",
+  jwtRefreshSecret: envVars?.JWT_REFRESH_SECRET || "defaultSecret",
+  configRefreshOptions: {
+    expiresIn: "7d"
+  },
+  configLoginOptions: {
+    expiresIn: "15m"
   }
 };
