@@ -10,6 +10,7 @@ export enum EventsEnumType {
   analyticsUser = "analytics_user",
   recentEvents = "recent_events",
   getEvent = "get_event",
+  refreshToken = "refresh-token",
 }
 
 export enum ResultMetadataKafka {

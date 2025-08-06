@@ -101,8 +101,36 @@ export const login = async (request: FastifyRequest, reply: FastifyReply) => {
 };
 
 export const refresh_token = async (request: FastifyRequest, reply: FastifyReply) => {
-  const refreshToken = request.headers.refreshToken as string;
-  const payload = await verifyToken(refreshToken);
-  const newAccessToken = createToken({ username: payload.username });
-  reply.send({ accessToken: newAccessToken });
+  const dataKafkaProducer: DataLoggerKafka = {
+    request,
+    userId: request.user?.userId || defaultUserId,
+    serviceName: "auth-refresh-token",
+    actionType: EventsEnumType.refreshToken,
+    isSuccess: true
+  };
+
+  try {
+    const refreshToken = request.headers.authorization?.replace('Bearer ', '');
+    
+    if (!refreshToken) {
+      throw new UnauthorizedError('Refresh token is required');
+    }
+
+    const payload = await verifyToken(refreshToken);
+    const newAccessToken = await createToken({ username: payload.username });
+    
+    await KafkaLoggerProducer({...dataKafkaProducer});
+    
+    return reply.status(200).send({ 
+      accessToken: newAccessToken,
+      message: 'Token refreshed successfully'
+    });
+  } catch (error) {
+    const serviceName = 'auth-refresh-token-error';
+    await KafkaLoggerProducer({...dataKafkaProducer, serviceName, isSuccess: false});
+    
+    return reply.status(401).send({ 
+      message: 'Invalid or expired refresh token'
+    });
+  }
 };
