@@ -3,12 +3,14 @@ import * as path from 'path';
 import dynDb from './dynamo.util.js';
 import { CreateTableCommand, type CreateTableCommandInput } from "@aws-sdk/client-dynamodb";
 
+const initFileJson: string = "init.json";
+
 const getPathFile = (fileName: string) => path.join("docker", "dynamodb", fileName);
 
 const getDataTable = async (pathFile: string) => JSON.parse(await readFile(pathFile, "utf8"));
 
-const pathFile: string = getPathFile("init.json");
-const dataTable: CreateTableCommandInput = await getDataTable(pathFile);
+const pathFile: string = getPathFile(initFileJson);
+const dataTables: CreateTableCommandInput[] = await getDataTable(pathFile);
 
 const createTable = async (input: CreateTableCommandInput) => {
   try {
@@ -20,4 +22,6 @@ const createTable = async (input: CreateTableCommandInput) => {
   }
 }
 
-createTable(dataTable);
+dataTables.forEach(dataTable => {
+  createTable(dataTable);
+});
