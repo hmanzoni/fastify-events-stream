@@ -1,12 +1,5 @@
-import {config, type DotenvParseOutput} from 'dotenv';
 import { DynConfig } from '../types/common/envConfig.js';
-import { EnvVarsNotFoundError } from '../errors/ConfigErrors.js';
-
-const envVars: DotenvParseOutput | undefined = config().parsed;
-
-if (!envVars) {
-  throw new EnvVarsNotFoundError("Error loading DynamoDB environment variables");
-}
+import envVars from './env.config.js';
 
 export const dynConfig: DynConfig = {
   region: "us-east-1",

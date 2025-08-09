@@ -1,12 +1,5 @@
-import { config, type DotenvParseOutput } from "dotenv";
 import { JwtConfig } from "../types/common/envConfig.js";
-import { EnvVarsNotFoundError } from "../errors/ConfigErrors.js";
-
-const envVars: DotenvParseOutput | undefined = config().parsed;
-
-if (!envVars) {
-  throw new EnvVarsNotFoundError("Error loading JWT environment variables");
-}
+import envVars from "./env.config.js";
 
 export const jwtConfig: JwtConfig = {
   jwtLoginSecret: envVars?.JWT_LOGIN_SECRET || "defaultSecret",
