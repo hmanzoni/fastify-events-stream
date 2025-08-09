@@ -6,19 +6,32 @@ import { EventKafkaData } from "../types/events/kafka.js";
 
 const producer: Producer = kafka.producer({createPartitioner: Partitioners.DefaultPartitioner });
 
-const kaftaProducer = async (messages: EventKafkaData) => {
+export const connectProducer = async () => {
   try {
     await producer.connect();
-    logInfo("Producer connected");
+    logInfo("Kafka Producer connected successfully");
+  } catch (err) {
+    logError("Error connecting Kafka Producer: ", err);
+    throw err;
+  }
+};
 
+export const disconnectProducer = async () => {
+  try {
+    await producer.disconnect();
+    logInfo("Kafka Producer disconnected successfully");
+  } catch (err) {
+    logError("Error disconnecting Kafka Producer: ", err);
+  }
+};
+
+const kaftaProducer = async (messages: EventKafkaData) => {
+  try {
     await producer.send({
       topic: kafkaConfig.topicEvent_1,
       messages: [{ value: JSON.stringify(messages) }],
     });
     logInfo("Messages sent to Kafka topic");
-
-    await producer.disconnect();
-    logInfo("Producer disconnected");
   } catch (err) {
     logError("Error kaftaProducer: ", err);
   }
