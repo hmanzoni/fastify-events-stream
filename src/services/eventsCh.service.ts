@@ -7,7 +7,8 @@ const queryDefaultCols: string = "COLUMNS('event_id'), COLUMNS('user_id'), COLUM
 
 export const getTopEvents = async (limit: string = "10") => {
   const queryCh: QueryParams = {
-    query: `SELECT ${queryDefaultCols} FROM events LIMIT ${limit}`,
+    query: `SELECT ${queryDefaultCols} FROM events LIMIT {limit:UInt64}`,
+    query_params: { limit: parseInt(limit) },
     format: "JSONEachRow",
   };
   const rows = await clientCH.query(queryCh);
@@ -25,7 +26,8 @@ export const getAllUsersEvents = async () => {
 
 export const getEventById = async (id: string) => {
   const queryCh: QueryParams = {
-    query: `SELECT ${queryDefaultCols} FROM events WHERE event_id = '${id}'`,
+    query: `SELECT ${queryDefaultCols} FROM events WHERE event_id = {id:String}`,
+    query_params: { id },
     format: "JSONEachRow",
   };
   const rows = await clientCH.query(queryCh);
@@ -34,7 +36,8 @@ export const getEventById = async (id: string) => {
 
 export const getEventByUserId = async (id: string) => {
   const queryCh: QueryParams = {
-    query: `SELECT ${queryDefaultCols} FROM events WHERE user_id = '${id}'`,
+    query: `SELECT ${queryDefaultCols} FROM events WHERE user_id = {id:String}`,
+    query_params: { id },
     format: "JSONEachRow",
   };
   const rows = await clientCH.query(queryCh);

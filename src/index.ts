@@ -5,6 +5,8 @@ import auth from "./routes/v1/auth.route.js";
 import events from "./routes/v1/events.route.js";
 import analytics from "./routes/v1/analytics.route.js";
 import { swaggerIndex, swaggerUiConfig } from "./schemas/index.schema.js";
+import { connectProducer, disconnectProducer } from "./services/producer.service.js";
+import { errorHandler } from "./errors/errorHandler.js";
 
 const { ADDRESS = "localhost", PORT = "3000" } = process.env;
 const portNum: number = parseInt(PORT, 10);
@@ -13,6 +15,8 @@ const addressHost: string = ADDRESS == "0.0.0.0" ? "localhost" : ADDRESS;
 const fastify: FastifyInstance = Fastify({
   logger: true,
 });
+
+fastify.setErrorHandler(errorHandler);
 
 const swaggerConfig = {
   ...swaggerIndex,
@@ -34,9 +38,15 @@ fastify.get("/", async (request, reply) => {
   };
 });
 
-fastify.listen({ host: ADDRESS, port: portNum }, function (err, address) {
+fastify.listen({ host: ADDRESS, port: portNum }, async function (err, address) {
   if (err) {
     fastify.log.error(err);
     process.exit(1);
   }
+  await connectProducer();
+  fastify.log.info(`Server listening on ${address}`);
+});
+
+process.on('beforeExit', async () => {
+  await disconnectProducer();
 });

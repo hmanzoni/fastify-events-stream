@@ -1,7 +1,5 @@
-import {
-  EventKafkaDataSchema,
-} from "../models/event.model.js";
-import kaftaProducer from "./producer.service.js";
+import { EventKafkaDataSchema } from "../models/event.model.js";
+import { default as kaftaProducer } from "./producer.service.js";
 import { DataLoggerKafka, EventKafkaData } from "../types/events/kafka.js";
 import { EventsEnumType, ResourceTypeMetadataKafka, ResultMetadataKafka } from "../types/events/event.enum.js";
 
@@ -11,6 +9,7 @@ const actionToResourceMap: Record<EventsEnumType, ResourceTypeMetadataKafka> = {
   [EventsEnumType.getProfile]: ResourceTypeMetadataKafka.user,
   [EventsEnumType.loginUser]: ResourceTypeMetadataKafka.auth,
   [EventsEnumType.logoutUser]: ResourceTypeMetadataKafka.auth,
+  [EventsEnumType.refreshToken]: ResourceTypeMetadataKafka.auth,
   [EventsEnumType.topEvents]: ResourceTypeMetadataKafka.analytics,
   [EventsEnumType.analyticsUser]: ResourceTypeMetadataKafka.analytics,
   [EventsEnumType.createEvent]: ResourceTypeMetadataKafka.events,
